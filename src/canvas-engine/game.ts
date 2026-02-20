@@ -1,5 +1,5 @@
 import { SceneManager } from './classes/scene-manager.js'
-import { _set_gc, getGameConfig } from './game-config.js'
+import { _set_gc, GameConfig } from './game-config.js'
 import { getDPRFromCtx } from './lib/dpr.js'
 import { Event } from './lib/event.js'
 
@@ -74,10 +74,9 @@ export class Game {
   static sceneManager = new SceneManager()
 
   static loop(delta: number) {
-    const gameConfig = getGameConfig()
     const node = this.sceneManager.currentNode
 
-    gameConfig.ctx.clearRect(0, 0, gameConfig.width, gameConfig.height)
+    GameConfig.ctx.clearRect(0, 0, GameConfig.width, GameConfig.height)
 
     if (node == null) return
 
