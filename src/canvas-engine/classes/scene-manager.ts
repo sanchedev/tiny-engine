@@ -16,7 +16,14 @@ export class SceneManager {
     return this.#currentNode
   }
 
-  changeScene(scene: string) {
+  changeScene(scene: string | null) {
+    this.#currentNode?.destroy()
+
+    if (scene == null) {
+      this.#currentScene = null
+      this.#currentNode = null
+      return
+    }
     if (!this.#scenes.has(scene)) return
 
     this.#currentScene = scene
