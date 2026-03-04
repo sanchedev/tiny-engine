@@ -6,9 +6,11 @@ import {
 } from '../../canvas-engine/nodes/animation-player.js'
 import {
   AnimationPlayer,
+  Node,
   Sprite,
   useNode,
 } from '../../canvas-engine/nodes/index.js'
+import { Pea } from '../projectiles/pea.js'
 
 await loadTexture(
   'peashooter.idle',
@@ -24,6 +26,7 @@ export function Peashooter() {
 
   onStart((node) => {
     const animPlayer = node.getChild<AnimationPlayer>('animation-player')
+    const peaContainer = node.getChild<Node>('pea-container')
 
     animPlayer
       .add('idle', {
@@ -53,6 +56,21 @@ export function Peashooter() {
         loop: false,
       })
 
+    animPlayer.animationEnded.on((anim) => {
+      if (anim === 'idle') {
+        animPlayer.play('shoot')
+      } else {
+        animPlayer.play('idle')
+      }
+    })
+
+    animPlayer.animationIndexChanged.on((index) => {
+      if (animPlayer.currentAnim === 'shoot' && index === 2) {
+        peaContainer.addChild(Pea())
+        console.log(peaContainer.children)
+      }
+    })
+
     animPlayer.play('idle')
   })
 
@@ -60,7 +78,13 @@ export function Peashooter() {
     new Sprite({
       textureId: 'peashooter.idle',
       size: new Vector2(16, 16),
-      children: [new AnimationPlayer({})],
+      children: [
+        new AnimationPlayer({}),
+        new Node({
+          id: 'pea-container',
+          position: new Vector2(10, 8),
+        }),
+      ],
     }),
   )
 }
