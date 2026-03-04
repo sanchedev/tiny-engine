@@ -12,7 +12,7 @@ export class Sprite extends Node {
   nodeName = 'sprite'
 
   #textureId: string
-  texture: Texture
+  #texture: Texture
   margin?: Vector2 | undefined
   size?: Vector2 | undefined
 
@@ -23,7 +23,7 @@ export class Sprite extends Node {
     if (this.textureId === value) return
 
     this.#textureId = value
-    this.texture = getTexture(value)
+    this.#texture = getTexture(value)
   }
 
   constructor(options: SpriteOptions) {
@@ -32,13 +32,13 @@ export class Sprite extends Node {
     this.id = options.id ?? this.nodeName
 
     this.#textureId = options.textureId
-    this.texture = getTexture(options.textureId)
+    this.#texture = getTexture(options.textureId)
     this.margin = options.margin
     this.size = options.size
   }
 
   draw(delta: number): void {
-    this.texture.draw({
+    this.#texture.draw({
       position: this.position,
       margin: this.margin,
       size: this.size,
