@@ -47,7 +47,7 @@ export class Game {
     options.canvas.height = h
     options.ctx.scale(r, r)
 
-    this.sceneManager.changeScene(null)
+    this.sceneManager.setScene(null)
   }
 
   static play() {

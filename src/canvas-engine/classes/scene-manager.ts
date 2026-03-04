@@ -8,15 +8,11 @@ export class SceneManager {
 
   #currentNode: Node | null = null
 
-  get currentScene() {
-    return this.#currentScene
+  addScene(name: string, scene: Scene) {
+    this.#scenes.set(name, scene)
   }
 
-  get currentNode() {
-    return this.#currentNode
-  }
-
-  changeScene(scene: string | null) {
+  setScene(scene: string | null) {
     this.#currentNode?.destroy()
 
     if (scene == null) {
@@ -28,5 +24,13 @@ export class SceneManager {
 
     this.#currentScene = scene
     this.#currentNode = this.#scenes.get(scene)!.render()
+  }
+
+  get currentScene() {
+    return this.#currentScene
+  }
+
+  get currentNode() {
+    return this.#currentNode
   }
 }
