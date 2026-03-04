@@ -1,5 +1,5 @@
 import type { Node } from '../nodes/node.js'
-import type { Event, Fun } from './event.js'
+import type { Event } from './event.js'
 
 type FunEv<T extends Event<any[]>> = Parameters<T['on']>[0]
 type ParEv<T extends Event<any[]>> = Parameters<FunEv<T>>
