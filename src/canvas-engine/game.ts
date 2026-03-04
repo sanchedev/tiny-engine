@@ -23,6 +23,8 @@ const onBlur = () => {
 }
 
 export class Game {
+  static sceneManager = new SceneManager()
+
   static setup(options: SetupOptions) {
     if (setuped) return
 
@@ -42,22 +44,16 @@ export class Game {
     this.sceneManager.changeScene(null)
   }
 
+  static play() {
+    window.requestAnimationFrame(this.#transition)
+  }
+
   static pause() {
     isPaused = true
     wakeLock?.release()
   }
 
-  static #update(time: number) {
-    const delta = (time - lastTime) / 1000
-    lastTime = time
-
-    Game.loop(delta)
-
-    if (isPaused) return
-    handle = window.requestAnimationFrame(this.#update)
-  }
-
-  static #transition(time: number) {
+  static #transition = (time: number) => {
     isPaused = false
     lastTime = time
     window.navigator.wakeLock.request('screen').then((w) => (wakeLock = w))
@@ -67,11 +63,15 @@ export class Game {
     handle = window.requestAnimationFrame(this.#update)
   }
 
-  static play() {
-    window.requestAnimationFrame(this.#transition)
-  }
+  static #update = (time: number) => {
+    const delta = (time - lastTime) / 1000
+    lastTime = time
 
-  static sceneManager = new SceneManager()
+    Game.loop(delta)
+
+    if (isPaused) return
+    handle = window.requestAnimationFrame(this.#update)
+  }
 
   static loop(delta: number) {
     const node = this.sceneManager.currentNode
