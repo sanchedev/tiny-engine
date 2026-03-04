@@ -53,8 +53,9 @@ export class AnimationPlayer extends Node {
 
     if (this.#index >= anim.keyframes.length) {
       if (!anim.loop) {
+        const animName = this.#currentAnim
         this.stop()
-        this.animationEnded.emit(this.#currentAnim)
+        this.animationEnded.emit(animName)
 
         return
       }
