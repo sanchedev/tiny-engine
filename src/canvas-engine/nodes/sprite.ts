@@ -20,6 +20,8 @@ export class Sprite extends Node {
     return this.#textureId
   }
   set textureId(value) {
+    if (this.textureId === value) return
+
     this.#textureId = value
     this.texture = getTexture(value)
   }
