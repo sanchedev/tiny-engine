@@ -11,13 +11,23 @@ export interface SpriteOptions extends NodeOptions {
 export class Sprite extends Node {
   nodeName = 'sprite'
 
+  #textureId: string
   texture: Texture
   margin?: Vector2 | undefined
   size?: Vector2 | undefined
 
+  get textureId() {
+    return this.#textureId
+  }
+  set textureId(value) {
+    this.#textureId = value
+    this.texture = getTexture(value)
+  }
+
   constructor(options: SpriteOptions) {
     super(options)
 
+    this.#textureId = options.textureId
     this.texture = getTexture(options.textureId)
     this.margin = options.margin
     this.size = options.size
