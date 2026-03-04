@@ -4,8 +4,9 @@ import { getDPRFromCtx } from './lib/dpr.js'
 import { Event } from './lib/event.js'
 
 interface SetupOptions {
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
+  width: number
+  height: number
+  root: HTMLElement
 }
 
 let isPaused = false
@@ -28,26 +29,34 @@ export class Game {
   static setup(options: SetupOptions) {
     if (setuped) return
 
+    const canvas = document.createElement('canvas')
+
+    options.root.append(canvas)
+
+    const ctx = canvas.getContext('2d')
+
+    if (ctx == null) throw new Error('Context 2D is not supported.')
+
     setuped = true
     _set_gc({
-      canvas: options.canvas,
-      ctx: options.ctx,
-      width: options.canvas.width,
-      height: options.canvas.height,
+      canvas: canvas,
+      ctx: ctx,
+      width: options.width,
+      height: options.height,
     })
 
-    options.canvas.style.setProperty('--width', options.canvas.width.toString())
-    options.canvas.style.setProperty(
-      '--height',
-      options.canvas.height.toString(),
-    )
+    canvas.width = options.width
+    canvas.height = options.height
 
-    const { width: w, height: h, ratio: r } = getDPRFromCtx(options.ctx)
-    options.canvas.width = w
-    options.canvas.height = h
-    options.ctx.scale(r, r)
+    options.root.style.setProperty('--width', canvas.width.toString())
+    options.root.style.setProperty('--height', canvas.height.toString())
 
-    options.ctx.imageSmoothingEnabled = false
+    const { width: w, height: h, ratio: r } = getDPRFromCtx(ctx)
+    canvas.width = w
+    canvas.height = h
+    ctx.scale(r, r)
+
+    ctx.imageSmoothingEnabled = false
 
     this.sceneManager.setScene(null)
   }
