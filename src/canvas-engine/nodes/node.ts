@@ -10,8 +10,9 @@ export interface NodeOptions {
 }
 
 export class Node {
-  id?: string | undefined
-  name: string
+  nodeName = 'node'
+
+  id: string
   position: Vector2 = Vector2.ZERO
   #zIndex: number = 0
   parent?: Node
@@ -22,9 +23,8 @@ export class Node {
   isStarted: boolean = false
   isDestroyed: boolean = false
 
-  constructor(name: string, { id, position, zIndex, children }: NodeOptions) {
-    this.id = id
-    this.name = name
+  constructor({ id, position, zIndex, children }: NodeOptions) {
+    this.id = id ?? this.nodeName
     if (position != null) this.position = position
     if (zIndex != null) this.#zIndex = zIndex
     this.children.push(...(children ?? []))
