@@ -2,11 +2,17 @@ import { GameConfig } from '../game-config.js'
 import type { Vector2 } from './vector2.js'
 
 export class Texture {
-  constructor(public image: HTMLImageElement) {}
+  width: number
+  height: number
+
+  constructor(public image: HTMLImageElement) {
+    this.width = image.width
+    this.height = image.height
+  }
 
   draw(options: TextureDrawOptions) {
-    const width = options.size?.x ?? this.image.width
-    const height = options.size?.y ?? this.image.height
+    const width = options.size?.x ?? this.width
+    const height = options.size?.y ?? this.height
 
     GameConfig.ctx.drawImage(
       this.image,
