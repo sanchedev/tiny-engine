@@ -1,6 +1,8 @@
 import { Texture, textures } from '../assets/texture.js'
 
 export async function loadTexture(id: string, url: string): Promise<void> {
+  if (textures.get(id)?.image.src === url) return
+
   const image = new Image()
 
   await new Promise<void>((resolve, reject) => {
