@@ -13,8 +13,8 @@ export function kfFromSpriteSheet(
 ): AnimationKeyframe[] {
   const texture = textureId ? getTexture(textureId) : sprite.getTexture()
 
-  const spriteWidth = texture.width
-  const spriteHeight = texture.height
+  const spriteWidth = texture?.width ?? 0
+  const spriteHeight = texture?.height ?? 0
 
   const sizeX = spriteWidth / spritesCountX
   const sizeY = spriteHeight / spritesCounty
