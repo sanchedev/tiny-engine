@@ -1,24 +1,11 @@
 import { getTexture } from '../assets/texture.js'
 import { Vector2 } from '../math/vector2.js'
 import type { AnimationKeyframe } from '../nodes/animation-player.js'
-import type { Node } from '../nodes/node.js'
 import type { Sprite } from '../nodes/sprite.js'
+import { multiKF } from './multiple.js'
+import { kfFromProp } from './properties.js'
 
-export function kfFromProp<T extends Node, K extends keyof T>(
-  node: T,
-  property: K,
-  value: T[K],
-): AnimationKeyframe {
-  return () => {
-    node[property] = value
-  }
-}
-
-export function multiKF(kfs: AnimationKeyframe[]): AnimationKeyframe {
-  return (time) => kfs.forEach((kf) => kf(time))
-}
-
-export function kfSpriteSheet(
+export function kfFromSpriteSheet(
   sprite: Sprite,
   textureId: string | null,
   spritesCountX: number = 1,
