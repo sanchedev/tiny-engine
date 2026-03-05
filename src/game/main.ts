@@ -1,1 +1,1 @@
-import './tests/ui.js'
+import './tests/peashooter.js'

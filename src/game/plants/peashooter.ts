@@ -1,14 +1,11 @@
 import { Vector2 } from '../../canvas-engine/index.js'
+import { useAdd, addStart } from '../../canvas-engine/lib/adds/index.js'
+import { kfSpriteSheet } from '../../canvas-engine/lib/animation.js'
 import { loadTexture } from '../../canvas-engine/load/textures.js'
-import {
-  kfFromProp,
-  multiKF,
-} from '../../canvas-engine/nodes/animation-player.js'
 import {
   AnimationPlayer,
   Node,
   Sprite,
-  useNode,
 } from '../../canvas-engine/nodes/index.js'
 import { Pea } from '../projectiles/pea.js'
 
@@ -22,37 +19,21 @@ await loadTexture(
 )
 
 export function Peashooter() {
-  const { node, onStart } = useNode<Sprite>()
+  const add = useAdd<Sprite>()
 
-  onStart((node) => {
+  addStart((node) => {
     const animPlayer = node.getChild<AnimationPlayer>('animation-player')
     const peaContainer = node.getChild<Node>('pea-container')
 
     animPlayer
       .add('idle', {
         fps: 4,
-        keyframes: [
-          multiKF([
-            kfFromProp(node, 'textureId', 'peashooter.idle'),
-            kfFromProp(node, 'margin', new Vector2(0, 0)),
-          ]),
-          kfFromProp(node, 'margin', new Vector2(16, 0)),
-          kfFromProp(node, 'margin', new Vector2(32, 0)),
-          kfFromProp(node, 'margin', new Vector2(48, 0)),
-        ],
+        keyframes: kfSpriteSheet(node, 'peashooter.idle', 4),
         loop: false,
       })
       .add('shoot', {
         fps: 4,
-        keyframes: [
-          multiKF([
-            kfFromProp(node, 'textureId', 'peashooter.shoot'),
-            kfFromProp(node, 'margin', new Vector2(0, 0)),
-          ]),
-          kfFromProp(node, 'margin', new Vector2(16, 0)),
-          kfFromProp(node, 'margin', new Vector2(32, 0)),
-          kfFromProp(node, 'margin', new Vector2(48, 0)),
-        ],
+        keyframes: kfSpriteSheet(node, 'peashooter.shoot', 4),
         loop: false,
       })
 
@@ -67,14 +48,13 @@ export function Peashooter() {
     animPlayer.animationIndexChanged.on((index) => {
       if (animPlayer.currentAnim === 'shoot' && index === 2) {
         peaContainer.addChild(Pea())
-        console.log(peaContainer.children)
       }
     })
 
     animPlayer.play('idle')
-  })
+  }, add.adds)
 
-  return node(
+  return add.toNode(
     new Sprite({
       textureId: 'peashooter.idle',
       size: new Vector2(16, 16),
