@@ -25,9 +25,5 @@ export function Pea() {
     }
   }, add.adds)
 
-  return add.toNode(
-    new Sprite({
-      textureId: 'pea',
-    }),
-  )
+  return add.toNode(<Sprite textureId='pea' />)
 }

@@ -62,16 +62,9 @@ export function Peashooter() {
   }, add.adds)
 
   return add.toNode(
-    new Sprite({
-      textureId: 'peashooter.idle',
-      size: new Vector2(16, 16),
-      children: [
-        new AnimationPlayer({}),
-        new Node({
-          id: 'pea-container',
-          position: new Vector2(10, 8),
-        }),
-      ],
-    }),
+    <Sprite textureId='peashooter.idle' size={new Vector2(16, 16)}>
+      <AnimationPlayer id='animation-player' />
+      <Node id='pea-container' position={new Vector2(10, 8)} />
+    </Sprite>,
   )
 }
