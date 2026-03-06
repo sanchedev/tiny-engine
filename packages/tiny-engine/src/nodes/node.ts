@@ -361,10 +361,25 @@ export class Node {
   }
 
   // Events
+  /**
+   * Detects whether `zIndex` **change**
+   */
   zIndexChanged = new Event<[zIndex: number]>()
+  /**
+   * Detects whether this `Node` **start**
+   */
   started = new Event<[]>()
+  /**
+   * Detects whether this `Node` **is drawing**
+   */
   drawed = new Event<[delta: number]>()
+  /**
+   * Detects whether this `Node` **is updating**
+   */
   updated = new Event<[delta: number]>()
+  /**
+   * Detects whether this `Node` is **destroyed**
+   */
   destroyed = new Event<[]>()
 
   start(): void {
@@ -396,6 +411,9 @@ export class Node {
     }
   }
 
+  /**
+   * The **`destroy`** method destroys and cleans this node.
+   */
   destroy() {
     if (this.isDestroyed) return
 
