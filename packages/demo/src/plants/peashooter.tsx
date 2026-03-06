@@ -1,12 +1,4 @@
-import {
-  loadTexture,
-  Sprite,
-  AnimationPlayer,
-  kfFromSpriteSheet,
-  Vector2,
-  Node,
-  useStart,
-} from 'tiny-engine'
+import { loadTexture, kfFromSpriteSheet, Vector2, useStart } from 'tiny-engine'
 
 import { Pea } from '../projectiles/pea.js'
 
@@ -20,10 +12,9 @@ await loadTexture(
 )
 
 export function Peashooter() {
-  useStart((node: Sprite) => {
-    console.log('start')
-    const animPlayer = node.getChild<AnimationPlayer>('animation-player')
-    const peaContainer = node.getChild<Node>('pea-container')
+  useStart<'sprite'>((node) => {
+    const animPlayer = node.getChild('animation-player')
+    const peaContainer = node.getChild('pea-container', 'node')
 
     animPlayer
       .add('idle', {
@@ -55,9 +46,9 @@ export function Peashooter() {
   })
 
   return (
-    <Sprite textureId='peashooter.idle' size={new Vector2(16, 16)}>
-      <AnimationPlayer id='animation-player' />
-      <Node id='pea-container' position={new Vector2(10, 8)} />
-    </Sprite>
+    <sprite textureId='peashooter.idle' size={new Vector2(16, 16)}>
+      <animation-player id='animation-player' />
+      <node id='pea-container' position={new Vector2(10, 8)} />
+    </sprite>
   )
 }

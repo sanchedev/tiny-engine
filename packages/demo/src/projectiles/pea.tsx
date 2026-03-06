@@ -1,20 +1,14 @@
-import {
-  GameConfig,
-  loadTexture,
-  Sprite,
-  useStart,
-  useUpdate,
-} from 'tiny-engine'
+import { GameConfig, loadTexture, useStart, useUpdate } from 'tiny-engine'
 
 await loadTexture('pea', 'assets/sprites/projectiles/pea.png')
 
 const PEA_SPEED = 40
 
 export function Pea() {
-  useStart((node: Sprite) => {
+  useStart<'sprite'>((node) => {
     console.log(node)
   })
-  useUpdate((node: Sprite, delta: number) => {
+  useUpdate<'sprite'>((node, delta: number) => {
     if (node.globalPosition.x <= GameConfig.width) {
       node.position.x += delta * PEA_SPEED
     } else {
@@ -22,5 +16,5 @@ export function Pea() {
     }
   })
 
-  return <Sprite textureId='pea' />
+  return <sprite textureId='pea' />
 }
