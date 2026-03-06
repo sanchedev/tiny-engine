@@ -1,10 +1,10 @@
-import type { Node } from '../nodes/node.js'
+import type { TypeElements } from '../nodes/types.js'
 import { pushEffect } from './context.js'
 
-export function useUpdate<T extends Node = Node>(
-  fn: (node: T, delta: number) => void,
+export function useUpdate<T extends keyof TypeElements = 'node'>(
+  fn: (node: TypeElements[T], delta: number) => void,
 ) {
   pushEffect((node) => {
-    node.updated.on((delta) => fn(node as T, delta))
+    node.updated.on((delta) => fn(node as TypeElements[T], delta))
   })
 }
