@@ -8,7 +8,9 @@ import { Text, textNodeName } from './ui/text.js'
 
 export type Children = undefined | Node | Node[]
 
-export type WithChildren<T extends NodeOptions> = T & { children?: Children }
+export type WithChildren<T extends NodeOptions> = Omit<T, 'children'> & {
+  children?: Children
+}
 
 export const Nodes = {
   [nodeName]: Node,
