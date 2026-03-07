@@ -6,12 +6,6 @@ import { AnimationPlayer, animationPlayerNodeName } from './animation-player.js'
 import { View, viewNodeName } from './ui/view.js'
 import { Text, textNodeName } from './ui/text.js'
 
-export type Children = undefined | Node | Node[]
-
-export type WithChildren<T extends NodeOptions> = Omit<T, 'children'> & {
-  children?: Children
-}
-
 export const Nodes = {
   [nodeName]: Node,
   [spriteNodeName]: Sprite,
@@ -23,10 +17,6 @@ export const Nodes = {
 
 export type NodesOptions = {
   [P in keyof typeof Nodes]: NodeToOptions<(typeof Nodes)[P]>
-}
-
-export type Elements = {
-  [P in keyof NodesOptions]: WithChildren<NodesOptions[P]>
 }
 
 export type TypeElements = {
