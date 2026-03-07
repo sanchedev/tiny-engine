@@ -39,9 +39,12 @@ export function jsx<T extends TinyComponent>(
 ): ReturnTypeOf<T> {
   const { children } = props
 
-  const safeChildren = (children ? [children].flat(Infinity) : undefined) as
-    | Node[]
-    | undefined
+  const safeChildren =
+    children == null
+      ? undefined
+      : Array.isArray(children)
+        ? (children.flat(Infinity) as Node[])
+        : ([children] as Node[])
 
   const newProps = { ...props, children: safeChildren }
 
@@ -51,7 +54,7 @@ export function jsx<T extends TinyComponent>(
 
   if (typeof type === 'string') {
     // Type is a string
-    if (!Object.keys(Nodes).includes(type))
+    if (!(type in Nodes))
       throw new Error(`Node with name ${type} does not exist.`)
     // Type is a key of nodes
 
