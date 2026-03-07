@@ -2,7 +2,10 @@ import type { Node } from '../nodes/node.js'
 import type { TypeElements } from '../nodes/types.js'
 import { pushEffect } from './context.js'
 
-export type UsedNode<T extends Node> = { node: T | undefined }
+export interface UsedNode<T extends Node> {
+  node: T | undefined
+  get(): T
+}
 
 /**
  * The **`useNode`** hooks gets a node by options.
@@ -14,10 +17,12 @@ export type UsedNode<T extends Node> = { node: T | undefined }
  * ```tsx
  * const nodeUsed = useNode()
  *
- * console.log(nodeUsed) // { node: undefined }
+ * console.log(nodeUsed.node) // undefined
+ * // console.log(nodeUsed.get()) // ERROR!
  *
  * const handleStart = () => {
- *   console.log(nodeUsed) // { node: Node }
+ *   console.log(nodeUsed.node) // Node
+ *   console.log(nodeUsed.get()) // Node
  * }
  *
  * return <node use={nodeUsed} onStart={handleStart} />
@@ -42,7 +47,13 @@ export function useNode<T extends keyof TypeElements = 'node'>(options?: {
   nodeType: T
   path?: string
 }): UsedNode<TypeElements[T]> {
-  const nodeRef: UsedNode<TypeElements[T]> = { node: undefined }
+  const nodeRef: UsedNode<TypeElements[T]> = {
+    node: undefined,
+    get: () => {
+      if (nodeRef.node == null) throw new Error('The node is not exist yet.')
+      return nodeRef.node
+    },
+  }
 
   if (options == null) return nodeRef
 
