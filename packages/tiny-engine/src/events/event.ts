@@ -9,6 +9,13 @@ export class Event<T extends any[]> {
     this.#list.push(cb)
   }
   /**
+   * The **`onFirst`** method subscribes the `cb` to this `Event` in the first priority.
+   * @param cb Callback
+   */
+  onFirst(cb: Fun<T>) {
+    this.#list.unshift(cb)
+  }
+  /**
    * The **`off`** method unsubscribes the `cb` to this `Event`.
    * @param cb Callback
    */
