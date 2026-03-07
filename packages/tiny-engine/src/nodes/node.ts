@@ -318,36 +318,71 @@ export class Node {
   /**
    * Returns the first element that is a descendant of this `Node` that matches path.
    *
-   * @param path The path of the node to search. Based in `node.id` joined with `/`
-   * @param nodeType Add a filter to get nodes with a specified type.
+   * If `path` is undefined then the method will return the first node with type `nodeType`.
+   *
+   * @param options Options to filter nodes
    * @returns Returns the node or throw an error.
+   *
+   * @example
+   * **Without path**
+   * ```ts
+   * const sprite = node.getChild({ nodeType: 'sprite' })
+   * ```
+   *
+   * @example
+   * **With relative path**
+   * ```ts
+   * const gun = node.getChild({ nodeType: 'sprite', path: 'gun' })
+   * ```
+   * ```ts
+   * const ball = node.getChild({ nodeType: 'sprite', path: '../ball' })
+   * ```
+   *
+   * @example
+   * **With absolute path**
+   * ```ts
+   * const mainNode = node.getChild({ nodeType: 'sprite', path: '/' })
+   * ```
+   * ```ts
+   * const box = node.getChild({ nodeType: 'node', path: '/box' })
+   * ```
    */
-  getChild<T extends keyof TypeElements = 'node'>(
-    path: string,
-    nodeType?: T,
-  ): TypeElements[T] {
-    let node: Node | undefined
+  getChild<T extends keyof TypeElements>(options: {
+    nodeType: T
+    path?: string
+  }): TypeElements[T] {
+    const { nodeType, path } = options
 
-    const pathSplitted = path.split('/')
-    if (path.startsWith('/')) {
-      node = Game.sceneManager.currentNode ?? undefined
-      pathSplitted.shift()
-    } else {
-      node = this
+    if (!(nodeType in Nodes)) {
+      throw new Error(`Node with type ${nodeType} does not exist.`)
     }
 
-    for (let i = 0; i < pathSplitted.length; i++) {
-      if (node == null) break
-      const n = pathSplitted[i]
-      if (n === '' && i === pathSplitted.length - 1) break
-      if (n === '.') {
-        continue
+    let node: Node | undefined
+
+    if (path != null) {
+      const pathSplitted = path.split('/')
+      if (path.startsWith('/')) {
+        node = Game.sceneManager.currentNode ?? undefined
+        pathSplitted.shift()
+      } else {
+        node = this
       }
-      if (n === '..') {
-        node = node.parent
-        continue
+
+      for (let i = 0; i < pathSplitted.length; i++) {
+        if (node == null) break
+        const n = pathSplitted[i]
+        if (n === '' && i === pathSplitted.length - 1) break
+        if (n === '.') {
+          continue
+        }
+        if (n === '..') {
+          node = node.parent
+          continue
+        }
+        node = node._children.find((node) => node.id === n)
       }
-      node = node._children.find((node) => node.id === n)
+    } else {
+      node = this.children.find((node) => node instanceof Nodes[nodeType])
     }
 
     if (node == null)
@@ -355,20 +390,16 @@ export class Node {
         'The node `' + path + '` in `' + this.id + '` does not exist.',
       )
 
-    if (nodeType && Nodes[nodeType] != null) {
-      if (node instanceof Nodes[nodeType]) return node as TypeElements[T]
-      throw new Error(
-        'The node `' +
-          path +
-          '` in ' +
-          this.toString() +
-          ' is not a ' +
-          nodeType +
-          '.',
-      )
-    }
-
-    return node as TypeElements[T]
+    if (node instanceof Nodes[nodeType]) return node as TypeElements[T]
+    throw new Error(
+      'The node `' +
+        path +
+        '` in ' +
+        this.toString() +
+        ' is not a ' +
+        nodeType +
+        '.',
+    )
   }
 
   /**
