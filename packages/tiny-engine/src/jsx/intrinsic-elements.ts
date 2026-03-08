@@ -7,7 +7,7 @@ import {
 import { View, viewNodeName } from '../nodes/ui/view.js'
 import { Text, textNodeName } from '../nodes/ui/text.js'
 import type { NodesOptions } from '../nodes/types.js'
-import type { UsedNode } from '../hooks/node.js'
+import { NODE_REF, type UsedNode } from '../hooks/node.js'
 
 export interface NodeElement<T extends Node = Node> {
   /** The **`use`** property can be user for `useNode` hook.
@@ -144,9 +144,9 @@ function addNodeElement<T extends Node>(node: T, opts: NodeElement): T {
   if (opts.onUpdate) node.updated.on(opts.onUpdate)
   if (opts.onDestroy) node.destroyed.on(opts.onDestroy)
   if (opts.use) {
-    const used = opts.use as T & { __used?: UsedNode<T> }
-    if (used.__used && 'node' in used.__used) {
-      used.__used.node = node
+    const used = opts.use as T & { [NODE_REF]?: UsedNode<T> }
+    if (used[NODE_REF] && 'node' in used[NODE_REF]) {
+      used[NODE_REF].node = node
     } else {
       throw new Error('Only usedsNodes can be set in use property.')
     }

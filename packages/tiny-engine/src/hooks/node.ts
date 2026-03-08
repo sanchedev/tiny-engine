@@ -7,6 +7,8 @@ export interface UsedNode<T extends Node> {
   get(): T
 }
 
+export const NODE_REF = Symbol('nodeRef')
+
 /**
  * The **`useNode`** hooks gets a node by options.
  * @param options The same options of Node.getChild
@@ -70,7 +72,7 @@ export function useNode<T extends keyof TypeElements = 'node'>(options?: {
 function createNodeProxy<T extends Node>(used: UsedNode<T>) {
   return new Proxy(used, {
     get(target, prop) {
-      if (prop === '__used') return used
+      if (prop === NODE_REF) return used
 
       const node = target.node
 
@@ -78,7 +80,7 @@ function createNodeProxy<T extends Node>(used: UsedNode<T>) {
         throw new Error('Node not mounted yet')
       }
 
-      const el = node[prop as keyof typeof node]
+      const el = Reflect.get(node, prop)
 
       if (typeof el === 'function') {
         return el.bind(node)
