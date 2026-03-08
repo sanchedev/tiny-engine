@@ -1,5 +1,3 @@
-import type { NodeOptions } from './index.js'
-
 import { Node, nodeName } from './node.js'
 import { Sprite, spriteNodeName } from './sprite.js'
 import { AnimationPlayer, animationPlayerNodeName } from './animation-player.js'
@@ -19,7 +17,7 @@ export type NodesOptions = {
   [P in keyof typeof Nodes]: NodeToOptions<(typeof Nodes)[P]>
 }
 
-export type TypeElements = {
+export type NodeTypes = {
   [P in keyof typeof Nodes]: (typeof Nodes)[P]['prototype']
 }
 

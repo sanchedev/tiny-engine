@@ -1,7 +1,7 @@
 import { Vector2 } from '../math/vector2.js'
 import { GameConfig } from '../core/game-config.js'
 import { Event } from '../events/event.js'
-import { Nodes, type TypeElements } from './types.js'
+import { Nodes, type NodeTypes } from './types.js'
 import { Game } from '../core/game.js'
 
 export interface NodeOptions {
@@ -347,10 +347,10 @@ export class Node {
    * const box = node.getChild({ nodeType: 'node', path: '/box' })
    * ```
    */
-  getChild<T extends keyof TypeElements>(options: {
+  getChild<T extends keyof NodeTypes>(options: {
     nodeType: T
     path?: string
-  }): TypeElements[T] {
+  }): NodeTypes[T] {
     const { nodeType, path } = options
 
     if (!(nodeType in Nodes)) {
@@ -390,7 +390,7 @@ export class Node {
         'The node `' + path + '` in `' + this.id + '` does not exist.',
       )
 
-    if (node instanceof Nodes[nodeType]) return node as TypeElements[T]
+    if (node instanceof Nodes[nodeType]) return node as NodeTypes[T]
     throw new Error(
       'The node `' +
         path +

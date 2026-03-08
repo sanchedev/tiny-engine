@@ -1,5 +1,5 @@
 import type { Node } from '../nodes/node.js'
-import type { TypeElements } from '../nodes/types.js'
+import type { NodeTypes } from '../nodes/types.js'
 import { pushEffect } from './context.js'
 
 export interface UsedNode<T extends Node> {
@@ -44,11 +44,11 @@ export const NODE_REF = Symbol('nodeRef')
  * )
  * ```
  */
-export function useNode<T extends keyof TypeElements = 'node'>(options?: {
+export function useNode<T extends keyof NodeTypes = 'node'>(options?: {
   nodeType: T
   path?: string
-}): TypeElements[T] {
-  const nodeRef: UsedNode<TypeElements[T]> = {
+}): NodeTypes[T] {
+  const nodeRef: UsedNode<NodeTypes[T]> = {
     node: undefined,
     get: () => {
       if (nodeRef.node == null) throw new Error('The node is not exist yet.')

@@ -1,5 +1,5 @@
 import { finishHooks, startHooks } from './hooks/context.js'
-import { Nodes, type TypeElements } from './nodes/types.js'
+import { Nodes, type NodeTypes } from './nodes/types.js'
 import { Node, type NodeOptions } from './nodes/index.js'
 import {
   getNodeFromClass,
@@ -92,6 +92,7 @@ declare global {
     type Element = Node
 
     interface IntrinsicElements extends NodeIntrinsicElements {}
-    interface NodeTypes extends TypeElements {}
+
+    type Nodes = NodeTypes
   }
 }
