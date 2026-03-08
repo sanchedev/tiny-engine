@@ -33,7 +33,7 @@ export class SceneManager {
 
     const setScene = () => {
       if (!(node instanceof Node)) {
-        throw new Error('A Scene only can have a only Node as main.')
+        throw new Error('A Scene only can have an only Node as main.')
       }
       this.#currentScene = scene
       this.#currentNode = node
@@ -60,7 +60,7 @@ export class SceneManager {
     const node = await this.#scenes.get(scene)!.load()
 
     if (!(node instanceof Node)) {
-      throw new Error('A Scene only can have a only Node as main.')
+      throw new Error('A Scene only can have an only Node as main.')
     }
 
     this.#currentScene = scene

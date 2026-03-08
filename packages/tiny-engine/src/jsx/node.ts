@@ -1,6 +1,6 @@
 import type { Node } from '../nodes/node.js'
 import { Nodes, type NodesOptions, type NodeToOptions } from '../nodes/types.js'
-import { processChildren } from './children.js'
+import { processTinyNode } from './tiny-node.js'
 import {
   applyToNode,
   type NodeIntrinsicElements,
@@ -19,7 +19,7 @@ export function getNodeFromComp<T extends {}, K extends TinyNode>(
   func: (props: T) => K,
   props: T,
 ): Node[] {
-  return processChildren(func(props))
+  return processTinyNode(func(props))
 }
 
 export function getNodeFromClass<T extends typeof Node>(

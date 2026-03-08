@@ -2,8 +2,10 @@ import type { TinyNode } from '../jsx/types.js'
 
 export interface HookContext {
   node: TinyNode | null
-  effects: ((node: TinyNode) => void)[]
+  effects: HookEffect[]
 }
+
+type HookEffect = (tinyNode: TinyNode) => void
 
 let currentContext: HookContext[] = []
 
@@ -21,7 +23,7 @@ export function finishHooks(node: TinyNode) {
   currentContext.pop()
 }
 
-export function pushEffect(effect: (node: TinyNode) => void) {
+export function pushEffect(effect: HookEffect) {
   if (!currentContext) {
     throw new Error('Hooks can only be used inside components.')
   }

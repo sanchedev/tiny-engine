@@ -1,4 +1,4 @@
-import { processChildren } from '../jsx/children.js'
+import { getNodeFromTinyNode } from '../jsx/tiny-node.js'
 import { Node } from '../nodes/node.js'
 import type { NodeTypes } from '../nodes/types.js'
 import { pushEffect } from './context.js'
@@ -61,16 +61,16 @@ export function useNode<T extends keyof NodeTypes = 'node'>(options?: {
 
   if (options == null) return proxy
 
-  pushEffect((node) => {
-    const nodes = processChildren(node)
-    const nd = nodes[0]
-
-    if (nodes.length !== 1 || !(nd instanceof Node)) {
-      throw new Error('Only can use useNode if the main node is an only Node.')
+  pushEffect((tinyNode) => {
+    const node = getNodeFromTinyNode(tinyNode)
+    if (node == null) {
+      throw new Error(
+        'Only can use useNode with path if the main node is an only Node.',
+      )
     }
 
-    nd.started.onFirst(() => {
-      nodeRef.node = nd.getChild(options)
+    node.started.onFirst(() => {
+      nodeRef.node = node.getChild(options)
     })
   })
 

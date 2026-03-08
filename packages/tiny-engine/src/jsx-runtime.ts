@@ -8,7 +8,7 @@ import {
 } from './jsx/node.js'
 import type { NodeIntrinsicElements } from './jsx/intrinsic-elements.js'
 import type { TinyNode } from './jsx/types.js'
-import { processChildren } from './jsx/children.js'
+import { processTinyNode } from './jsx/tiny-node.js'
 
 export type TinyComponent =
   | keyof JSX.IntrinsicElements
@@ -89,7 +89,7 @@ export function jsx<T extends TinyComponent>(
 
 export const jsxs = jsx
 export const Fragment = ({ children }: { children: TinyNode }) =>
-  processChildren(children)
+  processTinyNode(children)
 
 declare global {
   namespace JSX {

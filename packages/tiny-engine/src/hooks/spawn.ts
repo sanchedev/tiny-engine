@@ -1,4 +1,4 @@
-import { processChildren } from '../jsx/children.js'
+import { processTinyNode } from '../jsx/tiny-node.js'
 import type { TinyNode } from '../jsx/types.js'
 import type { Node } from '../nodes/node.js'
 import { pushEffect } from './context.js'
@@ -9,7 +9,7 @@ export function useSpawn(node: Node) {
   const spawn = (tinyNode: TinyNode) => {
     if (!isStarted) throw new Error('Node does not exist yet.')
 
-    const children = processChildren(tinyNode)
+    const children = processTinyNode(tinyNode)
 
     node.addChild(...children)
   }
