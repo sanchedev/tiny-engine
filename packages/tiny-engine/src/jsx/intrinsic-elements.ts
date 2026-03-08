@@ -1,7 +1,8 @@
-import { Node, type NodeOptions } from '../nodes/node.js'
+import { Node } from '../nodes/node.js'
 import type { NodeTypes, NodesOptions } from '../nodes/types.js'
 import { NODE_REF, type UsedNode } from '../hooks/node.js'
 import { Event } from '../events/event.js'
+import type { WithChildren } from './types.js'
 
 export type NodeElement<T extends Node = Node> = {
   /** The **`use`** property can be user for `useNode` hook.
@@ -62,12 +63,6 @@ function applyEvents<T extends Node>(node: T, opts: NodeElement<T>) {
 export type NodeIntrinsicElements = {
   [P in keyof NodeTypes]: WithChildren<NodesOptions[P]> &
     NodeElement<NodeTypes[P]>
-}
-
-type Children = undefined | Node | Node[]
-
-type WithChildren<T extends NodeOptions> = Omit<T, 'children'> & {
-  children?: Children
 }
 
 // Event

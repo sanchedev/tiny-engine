@@ -1,4 +1,4 @@
-import type { Node } from '../nodes/node.js'
+import { Node } from '../nodes/node.js'
 import type { Scene } from './scene.js'
 
 export class SceneManager {
@@ -25,12 +25,16 @@ export class SceneManager {
    * @returns Returns a function to set the preloaded scene.
    */
   async preloadScene(scene: string) {
-    if (!this.#scenes.has(scene))
+    if (!this.#scenes.has(scene)) {
       throw new Error(`Scene ${scene}does not exist.`)
+    }
 
     const node = await this.#scenes.get(scene)!.load()
 
     const setScene = () => {
+      if (!(node instanceof Node)) {
+        throw new Error('A Scene only can have a only Node as main.')
+      }
       this.#currentScene = scene
       this.#currentNode = node
     }
@@ -53,8 +57,14 @@ export class SceneManager {
     if (!this.#scenes.has(scene))
       throw new Error(`Scene ${scene}does not exist.`)
 
+    const node = await this.#scenes.get(scene)!.load()
+
+    if (!(node instanceof Node)) {
+      throw new Error('A Scene only can have a only Node as main.')
+    }
+
     this.#currentScene = scene
-    this.#currentNode = await this.#scenes.get(scene)!.load()
+    this.#currentNode = node
   }
 
   /** The read-only **`currentScene`** property returns the current scene name. */
