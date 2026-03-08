@@ -1,5 +1,6 @@
 import { Event } from '../events/event.js'
 import { Node, type NodeOptions } from './node.js'
+import { Nodes } from './types.js'
 
 export interface AnimationPlayerOptions extends NodeOptions {}
 
@@ -155,7 +156,7 @@ export class AnimationPlayer extends Node {
   }
 }
 
-new Audio().loop
+Nodes['animation-player'] = AnimationPlayer
 
 export interface Animation {
   /** Frames per second */

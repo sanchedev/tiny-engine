@@ -1,16 +1,21 @@
-import { Node, nodeName } from './node.js'
-import { Sprite, spriteNodeName } from './sprite.js'
-import { AnimationPlayer, animationPlayerNodeName } from './animation-player.js'
-import { View, viewNodeName } from './ui/view.js'
-import { Text, textNodeName } from './ui/text.js'
+import type { Node, nodeName } from './node.js'
+import type { Sprite, spriteNodeName } from './sprite.js'
+import type {
+  AnimationPlayer,
+  animationPlayerNodeName,
+} from './animation-player.js'
+import type { View, viewNodeName } from './ui/view.js'
+import type { Text, textNodeName } from './ui/text.js'
 
-export const Nodes = {
-  [nodeName]: Node,
-  [spriteNodeName]: Sprite,
-  [animationPlayerNodeName]: AnimationPlayer,
+export const Nodes: NodeClasses = {} as NodeClasses
+
+type NodeClasses = {
+  [nodeName]: typeof Node
+  [spriteNodeName]: typeof Sprite
+  [animationPlayerNodeName]: typeof AnimationPlayer
   // ui
-  [viewNodeName]: View,
-  [textNodeName]: Text,
+  [viewNodeName]: typeof View
+  [textNodeName]: typeof Text
 }
 
 export type NodesOptions = {

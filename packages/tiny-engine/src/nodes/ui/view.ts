@@ -1,6 +1,7 @@
 import { Vector2 } from '../../math/vector2.js'
 import { GameConfig } from '../../core/game-config.js'
 import { Node, type NodeOptions } from '../node.js'
+import { Nodes } from '../types.js'
 
 export interface ViewOptions extends NodeOptions {
   backgroundColor?: string
@@ -32,3 +33,5 @@ export class View extends Node {
     super.draw(delta)
   }
 }
+
+Nodes.view = View

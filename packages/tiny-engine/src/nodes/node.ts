@@ -428,13 +428,15 @@ export class Node {
    * Add child to this `Node`
    * @param child Child to add
    */
-  addChild(child: Node) {
-    this.#attachChild(child)
-    this._children.push(child)
-    this.#sortChildren()
-    if (this.isStarted) {
-      child.start()
+  addChild(...childs: Node[]) {
+    for (const child of childs) {
+      this.#attachChild(child)
+      this._children.push(child)
+      if (this.isStarted) {
+        child.start()
+      }
     }
+    this.#sortChildren()
   }
 
   #attachChild(child: Node) {
@@ -518,3 +520,5 @@ export class Node {
     }
   }
 }
+
+Nodes.node = Node
