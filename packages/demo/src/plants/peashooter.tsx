@@ -1,4 +1,10 @@
-import { loadTexture, kfFromSpriteSheet, Vector2, useNode } from 'tiny-engine'
+import {
+  loadTexture,
+  kfFromSpriteSheet,
+  Vector2,
+  useNode,
+  useSpawn,
+} from 'tiny-engine'
 
 import { Pea } from '../projectiles/pea.js'
 
@@ -18,6 +24,8 @@ export function Peashooter() {
     nodeType: 'node',
     path: '/projectiles',
   })
+
+  const spawnPea = useSpawn(projectilesContainer)
 
   const handleStart = () => {
     animPlayer
@@ -45,7 +53,7 @@ export function Peashooter() {
 
   const handleAnimationIndexChange = (index: number) => {
     if (animPlayer.currentAnim === 'shoot' && index === 2) {
-      projectilesContainer.addChild(
+      spawnPea(
         <Pea position={sprite.globalPosition.toAdded(new Vector2(10, 8))} />,
       )
     }
