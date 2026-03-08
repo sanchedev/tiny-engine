@@ -1,11 +1,8 @@
-import { jsx, type TinyComponent } from '../jsx-runtime.js'
+import { jsx } from '../jsx-runtime.js'
+import type { TinyType } from '../jsx/types.js'
 import { Node } from '../nodes/node.js'
 
-type RenderComponent =
-  | TinyComponent
-  | Promise<TinyComponent>
-  | Node
-  | Promise<Node>
+type RenderComponent = TinyType | Promise<TinyType> | Node | Promise<Node>
 
 /**
  * The **`Scene`** class creates scenes for the game.

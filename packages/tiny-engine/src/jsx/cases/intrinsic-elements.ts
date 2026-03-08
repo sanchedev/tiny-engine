@@ -1,22 +1,33 @@
-import { Node } from '../nodes/node.js'
-import type { NodeTypes, NodesOptions } from '../nodes/types.js'
-import { NODE_REF, type UsedNode } from '../hooks/node.js'
-import { Event } from '../events/event.js'
-import type { WithChildren } from './types.js'
+import { Event } from '../../events/event.js'
+import { NODE_REF, type UsedNode } from '../../hooks/node.js'
+import type { Node } from '../../nodes/node.js'
+import {
+  type NodeTypes,
+  Nodes,
+  type NodesOptions,
+  getNode,
+} from '../../nodes/types.js'
+import { processTinyNode } from '../tiny-node.js'
+import type { WithChildren } from '../types.js'
 
-export type NodeElement<T extends Node = Node> = {
-  /** The **`use`** property can be user for `useNode` hook.
-   * @example
-   * ```tsx
-   * const sprite = useNode()
-   *
-   * return <sprite use={sprite} />
-   * ```
-   */
-  use?: T
-} & RecordOfEvents<T>
+export function isIntrinsicElement(obj: any): obj is keyof NodeTypes {
+  if (typeof obj !== 'string') return false
+  if (!(obj in Nodes)) return false
+  return true
+}
 
-export function applyToNode<T extends Node>(node: T, opts: NodeElement<T>): T {
+export function getNodeFromintrinsicElement<T extends keyof NodeTypes>(
+  nodeName: T,
+  options: NodeIntrinsicElements[T],
+): (typeof Nodes)[T]['prototype'] {
+  const node = getNode(nodeName, {
+    ...options,
+    children: processTinyNode(options.children),
+  })
+  return applyToNode(node, options)
+}
+
+function applyToNode<T extends Node>(node: T, opts: NodeElement<T>): T {
   if (opts.use) {
     const used = opts.use as T & { [NODE_REF]?: UsedNode<T> }
     if (used[NODE_REF] && 'node' in used[NODE_REF]) {
@@ -59,6 +70,18 @@ function applyEvents<T extends Node>(node: T, opts: NodeElement<T>) {
     ev.on(fn as (typeof ev)['exampleFun'])
   }
 }
+
+export type NodeElement<T extends Node = Node> = {
+  /** The **`use`** property can be user for `useNode` hook.
+   * @example
+   * ```tsx
+   * const sprite = useNode()
+   *
+   * return <sprite use={sprite} />
+   * ```
+   */
+  use?: T
+} & RecordOfEvents<T>
 
 export type NodeIntrinsicElements = {
   [P in keyof NodeTypes]: WithChildren<NodesOptions[P]> &

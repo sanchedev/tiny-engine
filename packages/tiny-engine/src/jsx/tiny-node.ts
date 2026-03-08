@@ -2,15 +2,15 @@ import { Node } from '../nodes/node.js'
 import type { TinyNode } from './types.js'
 
 export function processTinyNode(tinyNode: TinyNode): Node[] {
-  if (tinyNode == null) {
-    return []
+  if (tinyNode instanceof Node) {
+    return [tinyNode]
   }
   if (Array.isArray(tinyNode)) {
     return tinyNode
       .flat(Infinity)
       .filter((node) => node instanceof Node) as Node[]
   }
-  return [tinyNode]
+  return []
 }
 
 export function getNodeFromTinyNode(node: TinyNode): Node | undefined {
