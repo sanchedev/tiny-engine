@@ -15,24 +15,23 @@ export interface UsedNode<T extends Node> {
  * **Without options**
  *
  * ```tsx
- * const nodeUsed = useNode()
+ * const node = useNode()
  *
- * console.log(nodeUsed.node) // undefined
- * // console.log(nodeUsed.get()) // ERROR!
+ * // console.log(node) // Proxy
+ * // console.log(node.position) // ERROR!
  *
  * const handleStart = () => {
- *   console.log(nodeUsed.node) // Node
- *   console.log(nodeUsed.get()) // Node
+ *   console.log(node) // Node
  * }
  *
- * return <node use={nodeUsed} onStart={handleStart} />
+ * return <node use={node} onStart={handleStart} />
  * ```
  *
  * @example
  * **With options**
  *
  * ```tsx
- * const spriteUsed = useNode<'sprite'>({ nodeType: 'sprite', path: 'child1/child2' })
+ * const sprite = useNode<'sprite'>({ nodeType: 'sprite', path: 'child1/child2' })
  *
  * return (
  *   <node>
@@ -46,7 +45,7 @@ export interface UsedNode<T extends Node> {
 export function useNode<T extends keyof TypeElements = 'node'>(options?: {
   nodeType: T
   path?: string
-}): UsedNode<TypeElements[T]> {
+}): TypeElements[T] {
   const nodeRef: UsedNode<TypeElements[T]> = {
     node: undefined,
     get: () => {
@@ -55,7 +54,9 @@ export function useNode<T extends keyof TypeElements = 'node'>(options?: {
     },
   }
 
-  if (options == null) return nodeRef
+  const proxy = createNodeProxy(nodeRef)
+
+  if (options == null) return proxy
 
   pushEffect((node) => {
     node.started.onFirst(() => {
@@ -63,5 +64,37 @@ export function useNode<T extends keyof TypeElements = 'node'>(options?: {
     })
   })
 
-  return nodeRef
+  return proxy
+}
+
+function createNodeProxy<T extends Node>(used: UsedNode<T>) {
+  return new Proxy(used, {
+    get(target, prop) {
+      if (prop === '__used') return used
+
+      const node = target.node
+
+      if (!node) {
+        throw new Error('Node not mounted yet')
+      }
+
+      const el = node[prop as keyof typeof node]
+
+      if (typeof el === 'function') {
+        return el.bind(node)
+      }
+
+      return el
+    },
+    set(target, prop, value) {
+      const node = target.node
+
+      if (!node) {
+        throw new Error('Node not mounted yet')
+      }
+
+      node[prop as keyof typeof node] = value
+      return true
+    },
+  }) as unknown as T
 }

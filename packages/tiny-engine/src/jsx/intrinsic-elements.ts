@@ -13,12 +13,12 @@ export interface NodeElement<T extends Node = Node> {
   /** The **`use`** property can be user for `useNode` hook.
    * @example
    * ```tsx
-   * const spriteUsed = useNode()
+   * const sprite = useNode()
    *
-   * return <sprite use={spriteUsed} />
+   * return <sprite use={sprite} />
    * ```
    */
-  use?: UsedNode<T>
+  use?: T
   /** The **`onStart`** property connects a function to `Node.started` event.
    * @example
    * ```tsx
@@ -143,7 +143,14 @@ function addNodeElement<T extends Node>(node: T, opts: NodeElement): T {
   if (opts.onDraw) node.drawed.on(opts.onDraw)
   if (opts.onUpdate) node.updated.on(opts.onUpdate)
   if (opts.onDestroy) node.destroyed.on(opts.onDestroy)
-  if (opts.use) opts.use.node = node
+  if (opts.use) {
+    const used = opts.use as T & { __used?: UsedNode<T> }
+    if (used.__used && 'node' in used.__used) {
+      used.__used.node = node
+    } else {
+      throw new Error('Only usedsNodes can be set in use property.')
+    }
+  }
   return node
 }
 
