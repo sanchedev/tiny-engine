@@ -3,6 +3,8 @@ import { Theme } from './theme.js'
 import { _set_gc, GameConfig } from './game-config.js'
 import { getDPRFromCtx } from '../utils/dpr.js'
 import { Event } from '../events/event.js'
+import { Context2DNotSupportedError } from '../errors/env.js'
+import { EngineNotSetupError } from '../errors/lifecycle.js'
 
 interface SetupOptions {
   /** The width of the canvas. */
@@ -59,7 +61,7 @@ export class Game {
 
     const ctx = canvas.getContext('2d')
 
-    if (ctx == null) throw new Error('Context 2D is not supported.')
+    if (ctx == null) throw new Context2DNotSupportedError()
 
     setuped = true
     _set_gc({
@@ -109,7 +111,7 @@ export class Game {
    * ```
    */
   static play() {
-    if (!setuped) throw new Error('The Game can not play if it is not setuped.')
+    if (!setuped) throw new EngineNotSetupError()
     window.requestAnimationFrame(this.#transition)
   }
 

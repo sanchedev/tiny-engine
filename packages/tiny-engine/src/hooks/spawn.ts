@@ -1,3 +1,5 @@
+import { HookRequiresNodeRootError } from '../errors/hook.js'
+import { NodeNotInitializedError } from '../errors/lifecycle.js'
 import { processTinyNode, getNodeFromTinyNode } from '../jsx/tiny-node.js'
 import type { TinyNode } from '../jsx/types.js'
 import type { Node } from '../nodes/node.js'
@@ -47,18 +49,19 @@ export function useSpawn(node?: Node) {
   let nodeRef: Node | undefined = node
 
   const spawn = (tinyNode: TinyNode) => {
-    if (nodeRef == null) throw new Error('Node does not exist yet.')
+    if (nodeRef == null)
+      throw new NodeNotInitializedError(node ? 'Unknown' : 'Root')
 
     const children = processTinyNode(tinyNode)
 
     nodeRef.addChild(...children)
   }
 
-  pushEffect((tinyNode) => {
+  pushEffect('useSpawn', (tinyNode) => {
     if (node == null) {
       nodeRef = getNodeFromTinyNode(tinyNode)
       if (nodeRef == null) {
-        throw new Error('The main node should be an only node.')
+        throw new HookRequiresNodeRootError('useSpawn')
       }
     }
   })

@@ -1,4 +1,5 @@
 import { GameConfig } from '../core/game-config.js'
+import { TextureNotFoundError } from '../errors/assets.js'
 import type { Vector2 } from '../math/vector2.js'
 
 export class Texture {
@@ -56,8 +57,7 @@ export const textures = new Map<string, Texture>()
 export function getTexture(id: string) {
   const texture = textures.get(id)
 
-  if (texture == null)
-    throw new Error('The texture with ID ' + id + ' does not exist.')
+  if (texture == null) throw new TextureNotFoundError(id)
 
   return texture
 }

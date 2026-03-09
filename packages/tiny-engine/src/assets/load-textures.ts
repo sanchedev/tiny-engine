@@ -1,4 +1,5 @@
 import { Texture, textures } from '../assets/texture.js'
+import { TextureAlreadyRegisteredError } from '../errors/assets.js'
 
 /**
  * The **`loadTexture`** function loads textures for be used.
@@ -10,9 +11,7 @@ export async function loadTexture(id: string, url: string): Promise<void> {
   if (texture != null) {
     if (texture.image.src === url) return
 
-    throw new Error(
-      `The id ${id} is used for other texture. You want load ${url}, but it is loaded ${texture.image.src}`,
-    )
+    throw new TextureAlreadyRegisteredError(id, texture.image.src, url)
   }
 
   const image = new Image()

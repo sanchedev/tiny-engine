@@ -1,3 +1,4 @@
+import { HookOutsideComponentError } from '../errors/hook.js'
 import type { TinyNode } from '../jsx/types.js'
 
 export interface HookContext {
@@ -23,9 +24,9 @@ export function finishHooks(node: TinyNode) {
   currentContext.pop()
 }
 
-export function pushEffect(effect: HookEffect) {
+export function pushEffect(hookName: string, effect: HookEffect) {
   if (!currentContext) {
-    throw new Error('Hooks can only be used inside components.')
+    throw new HookOutsideComponentError(hookName)
   }
 
   currentContext.at(-1)?.effects.push(effect)

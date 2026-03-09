@@ -1,3 +1,5 @@
+import { HookRequiresNodeRootError } from '../errors/hook.js'
+import { NodeNotInitializedError } from '../errors/lifecycle.js'
 import { getNodeFromTinyNode } from '../jsx/tiny-node.js'
 import { Node } from '../nodes/node.js'
 import type { NodeTypes } from '../nodes/types.js'
@@ -5,7 +7,6 @@ import { pushEffect } from './context.js'
 
 export interface UsedNode<T extends Node> {
   node: T | undefined
-  get(): T
 }
 
 export const NODE_REF = Symbol('nodeRef')
@@ -51,22 +52,19 @@ export function useNode<T extends keyof NodeTypes = 'node'>(options?: {
 }): NodeTypes[T] {
   const nodeRef: UsedNode<NodeTypes[T]> = {
     node: undefined,
-    get: () => {
-      if (nodeRef.node == null) throw new Error('The node is not exist yet.')
-      return nodeRef.node
-    },
   }
 
-  const proxy = createNodeProxy(nodeRef)
+  const proxy = createNodeProxy(
+    nodeRef,
+    options ? (options?.path ?? 'Unknown') : 'Root',
+  )
 
   if (options == null) return proxy
 
-  pushEffect((tinyNode) => {
+  pushEffect('useNode', (tinyNode) => {
     const node = getNodeFromTinyNode(tinyNode)
     if (node == null) {
-      throw new Error(
-        'Only can use useNode with path if the main node is an only Node.',
-      )
+      throw new HookRequiresNodeRootError('useNode')
     }
 
     node.started.onFirst(() => {
@@ -77,7 +75,7 @@ export function useNode<T extends keyof NodeTypes = 'node'>(options?: {
   return proxy
 }
 
-function createNodeProxy<T extends Node>(used: UsedNode<T>) {
+function createNodeProxy<T extends Node>(used: UsedNode<T>, nodeName: string) {
   return new Proxy(used, {
     get(target, prop) {
       if (prop === NODE_REF) return used
@@ -85,7 +83,7 @@ function createNodeProxy<T extends Node>(used: UsedNode<T>) {
       const node = target.node
 
       if (!node) {
-        throw new Error('Node not mounted yet')
+        throw new NodeNotInitializedError(nodeName)
       }
 
       const el = Reflect.get(node, prop)
@@ -100,7 +98,7 @@ function createNodeProxy<T extends Node>(used: UsedNode<T>) {
       const node = target.node
 
       if (!node) {
-        throw new Error('Node not mounted yet')
+        throw new NodeNotInitializedError(nodeName)
       }
 
       node[prop as keyof typeof node] = value

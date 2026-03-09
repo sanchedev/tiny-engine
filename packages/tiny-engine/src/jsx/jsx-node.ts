@@ -1,4 +1,8 @@
 import {
+  InvalidJSXElementTypeError,
+  UnknownIntrinsicElementError,
+} from '../errors/jsx.js'
+import {
   getNodeFromFuncComponent,
   isFuncComponent,
 } from './cases/func-components.js'
@@ -13,7 +17,10 @@ export function getJSXNode<T extends TinyType>(
   tiny: T,
   props: JSXProps<T>,
 ): JSXReturn<T> {
-  if (isIntrinsicElement(tiny)) {
+  if (typeof tiny === 'string') {
+    if (!isIntrinsicElement(tiny)) {
+      throw new UnknownIntrinsicElementError(tiny)
+    }
     return getNodeFromintrinsicElement(tiny, props) as JSXReturn<T>
   }
   if (isFuncComponent(tiny)) {
@@ -23,5 +30,5 @@ export function getJSXNode<T extends TinyType>(
     return getNodeFromNodeClass(tiny, props) as JSXReturn<T>
   }
 
-  throw new Error(`The type ${tiny} is not allowed.`)
+  throw new InvalidJSXElementTypeError(tiny)
 }

@@ -1,3 +1,4 @@
+import { InvalidSceneRootError, SceneNotFoundError } from '../errors/scene.js'
 import { Node } from '../nodes/node.js'
 import type { Scene } from './scene.js'
 
@@ -26,14 +27,14 @@ export class SceneManager {
    */
   async preloadScene(scene: string) {
     if (!this.#scenes.has(scene)) {
-      throw new Error(`Scene ${scene}does not exist.`)
+      throw new SceneNotFoundError(scene)
     }
 
     const node = await this.#scenes.get(scene)!.load()
 
     const setScene = () => {
       if (!(node instanceof Node)) {
-        throw new Error('A Scene only can have an only Node as main.')
+        throw new InvalidSceneRootError()
       }
       this.#currentScene = scene
       this.#currentNode = node
@@ -54,13 +55,12 @@ export class SceneManager {
 
     if (scene == null) return
 
-    if (!this.#scenes.has(scene))
-      throw new Error(`Scene ${scene}does not exist.`)
+    if (!this.#scenes.has(scene)) throw new SceneNotFoundError(scene)
 
     const node = await this.#scenes.get(scene)!.load()
 
     if (!(node instanceof Node)) {
-      throw new Error('A Scene only can have an only Node as main.')
+      throw new InvalidSceneRootError()
     }
 
     this.#currentScene = scene
