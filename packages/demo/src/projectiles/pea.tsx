@@ -15,7 +15,7 @@ interface PeaProps {
 }
 
 export function Pea({ position }: PeaProps) {
-  const pea = useNode<'sprite'>()
+  const pea = useNode('sprite')
   const peaPos = useSignal(position)
 
   const handleUpdate = (delta: number) => {

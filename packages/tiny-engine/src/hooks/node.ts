@@ -1,13 +1,20 @@
-import { HookRequiresNodeRootError } from '../errors/hook.js'
+import {
+  HookRequiresNodeRootError,
+  NodeHookTypeMismatchError,
+} from '../errors/hook.js'
 import { NodeNotInitializedError } from '../errors/lifecycle.js'
 import { getNodeFromTinyNode } from '../jsx/tiny-node.js'
 import { Node } from '../nodes/node.js'
-import type { NodeTypes } from '../nodes/types.js'
+import { Nodes } from '../nodes/registry.js'
+import { type NodeTypes } from '../nodes/types.js'
+import { getNodeName } from '../nodes/utils.js'
 import { pushEffect } from './context.js'
 
-export interface UsedNode<T extends Node> {
+interface UsedNode<T extends Node> {
   node: T | undefined
 }
+
+export type NodeSetter = (node: Node) => void
 
 export const NODE_REF = Symbol('nodeRef')
 
@@ -19,7 +26,7 @@ export const NODE_REF = Symbol('nodeRef')
  * **Without options**
  *
  * ```tsx
- * const node = useNode()
+ * const node = useNode('node')
  *
  * // console.log(node) // Proxy
  * // console.log(node.position) // ERROR!
@@ -35,7 +42,7 @@ export const NODE_REF = Symbol('nodeRef')
  * **With options**
  *
  * ```tsx
- * const sprite = useNode<'sprite'>({ nodeType: 'sprite', path: 'child1/child2' })
+ * const sprite = useNode({ nodeType: 'sprite', path: 'child1/child2' })
  *
  * return (
  *   <node>
@@ -46,20 +53,28 @@ export const NODE_REF = Symbol('nodeRef')
  * )
  * ```
  */
-export function useNode<T extends keyof NodeTypes = 'node'>(options?: {
-  nodeType: T
-  path?: string
-}): NodeTypes[T] {
+export function useNode<T extends keyof NodeTypes = 'node'>(
+  options:
+    | {
+        nodeType: T
+        path?: string
+      }
+    | T,
+): NodeTypes[T] {
   const nodeRef: UsedNode<NodeTypes[T]> = {
     node: undefined,
   }
 
+  const nodeType = typeof options === 'string' ? options : options.nodeType
+  const nodeName = typeof options !== 'string' ? options.path : null
+
   const proxy = createNodeProxy(
     nodeRef,
-    options ? (options?.path ?? 'Unknown') : 'Root',
+    nodeName ? nodeName : 'Type: ' + nodeType,
+    nodeType,
   )
 
-  if (options == null) return proxy
+  if (typeof options === 'string') return proxy
 
   pushEffect('useNode', (tinyNode) => {
     const node = getNodeFromTinyNode(tinyNode)
@@ -75,10 +90,21 @@ export function useNode<T extends keyof NodeTypes = 'node'>(options?: {
   return proxy
 }
 
-function createNodeProxy<T extends Node>(used: UsedNode<T>, nodeName: string) {
+function createNodeProxy<T extends Node>(
+  used: UsedNode<T>,
+  nodeName: string,
+  nodeType: keyof typeof Nodes,
+) {
   return new Proxy(used, {
     get(target, prop) {
-      if (prop === NODE_REF) return used
+      if (prop === NODE_REF) {
+        return ((node) => {
+          if (Object.getPrototypeOf(node) !== Nodes[nodeType].prototype) {
+            throw new NodeHookTypeMismatchError(nodeType, getNodeName(node))
+          }
+          used.node = node as T
+        }) as NodeSetter
+      }
 
       const node = target.node
 

@@ -1,9 +1,17 @@
 import { Vector2 } from '../math/vector2.js'
 import { GameConfig } from '../core/game-config.js'
 import { Event } from '../events/event.js'
-import { Nodes, type NodeTypes } from './types.js'
+import { type NodeTypes } from './types.js'
 import { Game } from '../core/game.js'
-import { Signal } from '../utils/signal.js'
+import { Signal } from '../reactivity/signal.js'
+import {
+  InvalidNodeIdError,
+  NodeChildNotFoundError,
+  NodeTypeMismatchError,
+  UnknownNodeTypeError,
+} from '../errors/node.js'
+import { getNodeName } from './utils.js'
+import { Nodes } from './registry.js'
 
 export interface NodeOptions {
   /**
@@ -168,7 +176,7 @@ export class Node {
     if (id) {
       const matches = id.match(idRegEx)
       if (matches == null || matches.length !== 1 || matches[0] !== id) {
-        throw new Error(
+        throw new InvalidNodeIdError(
           'The id ' + id + ' does not matches with `([a-zA-Z][a-zA-Z0-9-_]*)`',
         )
       }
@@ -376,7 +384,7 @@ export class Node {
     const { nodeType, path } = options
 
     if (!(nodeType in Nodes)) {
-      throw new Error(`Node with type ${nodeType} does not exist.`)
+      throw new UnknownNodeTypeError(nodeType)
     }
 
     let node: Node | undefined
@@ -407,21 +415,18 @@ export class Node {
       node = this.children.find((node) => node instanceof Nodes[nodeType])
     }
 
-    if (node == null)
-      throw new Error(
-        'The node `' + path + '` in `' + this.id + '` does not exist.',
-      )
+    if (node == null) {
+      if (path) {
+        throw new NodeChildNotFoundError(path)
+      } else {
+        throw new NodeTypeMismatchError(nodeType, 'undefined')
+      }
+    }
 
-    if (node instanceof Nodes[nodeType]) return node as NodeTypes[T]
-    throw new Error(
-      'The node `' +
-        path +
-        '` in ' +
-        this.toString() +
-        ' is not a ' +
-        nodeType +
-        '.',
-    )
+    if (!(node instanceof Nodes[nodeType])) {
+      throw new NodeTypeMismatchError(nodeType, getNodeName(node))
+    }
+    return node as NodeTypes[T]
   }
 
   /**

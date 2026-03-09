@@ -1,7 +1,7 @@
 import { Vector2 } from '../../math/vector2.js'
 import { GameConfig } from '../../core/game-config.js'
 import { Node, type NodeOptions } from '../node.js'
-import { Nodes } from '../types.js'
+import { Nodes } from '../registry.js'
 
 export interface ViewOptions extends NodeOptions {
   backgroundColor?: string

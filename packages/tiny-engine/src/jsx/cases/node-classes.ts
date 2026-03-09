@@ -1,5 +1,6 @@
 import { Node } from '../../nodes/node.js'
-import { type NodeToOptions, getNodeFromClass } from '../../nodes/types.js'
+import { getNodeFromClass } from '../../nodes/registry.js'
+import { type NodeToOptions } from '../../nodes/types.js'
 
 export function isNodeClass(obj: any): obj is typeof Node {
   if (typeof obj !== 'function') return false

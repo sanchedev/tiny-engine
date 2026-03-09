@@ -1,3 +1,4 @@
+import { Nodes } from '../nodes/registry.js'
 import { TinyEngineError } from './base.js'
 
 export class NodeError extends TinyEngineError {
@@ -22,5 +23,26 @@ export class NodeChildNotFoundError extends NodeError {
 export class NodeTypeMismatchError extends NodeError {
   constructor(expected: string, received: string) {
     super(`Expected node type "${expected}" but received "${received}"`)
+  }
+}
+
+export class UnknownNodeTypeError extends NodeError {
+  constructor(type: string) {
+    super(
+      `Unknown node type "${type}". Available types: ${Object.keys(Nodes).join(', ')}`,
+    )
+  }
+}
+
+export class InvalidNodeInstanceError extends NodeError {
+  constructor(received: unknown) {
+    const type =
+      received === null
+        ? 'null'
+        : received === undefined
+          ? 'undefined'
+          : (received?.constructor?.name ?? typeof received)
+
+    super(`Expected a Node instance but received ${type}`)
   }
 }

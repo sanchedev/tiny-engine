@@ -1,6 +1,7 @@
+import { KeyframeNotFoundError } from '../errors/animation.js'
 import { Event } from '../events/event.js'
 import { Node, type NodeOptions } from './node.js'
-import { Nodes } from './types.js'
+import { Nodes } from './registry.js'
 
 export interface AnimationPlayerOptions extends NodeOptions {}
 
@@ -139,7 +140,7 @@ export class AnimationPlayer extends Node {
 
     const kf = anim.keyframes[i]
 
-    if (kf == null) throw new Error(`The keyframe index ${i} does not exist.`)
+    if (kf == null) throw new KeyframeNotFoundError(i)
 
     kf(this.#index % 1)
 

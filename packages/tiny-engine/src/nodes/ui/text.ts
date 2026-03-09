@@ -1,7 +1,7 @@
 import type { FontWeight, TextAlign } from '../../core/theme.js'
 import { GameConfig } from '../../core/game-config.js'
 import { Node, type NodeOptions } from '../node.js'
-import { Nodes } from '../types.js'
+import { Nodes } from '../registry.js'
 
 export interface TextOptions extends NodeOptions {
   text: string

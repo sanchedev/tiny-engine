@@ -1,8 +1,8 @@
 import { getTexture, type Texture } from '../assets/texture.js'
 import type { Vector2 } from '../math/vector2.js'
-import { Signal } from '../utils/signal.js'
+import { Signal } from '../reactivity/signal.js'
 import { Node, type NodeOptions } from './node.js'
-import { Nodes } from './types.js'
+import { Nodes } from './registry.js'
 
 export interface SpriteOptions extends NodeOptions {
   /**

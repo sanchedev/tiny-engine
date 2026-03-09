@@ -29,8 +29,8 @@ export function Peashooter() {
 }
 
 function usePeashooter() {
-  const sprite = useNode<'sprite'>()
-  const animPlayer = useNode<'animation-player'>()
+  const sprite = useNode('sprite')
+  const animPlayer = useNode('animation-player')
   const projectilesContainer = useNode({
     nodeType: 'node',
     path: '/projectiles',

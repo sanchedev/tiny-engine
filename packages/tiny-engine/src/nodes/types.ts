@@ -6,24 +6,9 @@ import type {
 } from './animation-player.js'
 import type { View, viewNodeName } from './ui/view.js'
 import type { Text, textNodeName } from './ui/text.js'
+import type { Nodes } from './registry.js'
 
-export function getNode<T extends keyof NodeClasses>(
-  nodeName: T,
-  options: NodeToOptions<NodeClasses[T]>,
-) {
-  return getNodeFromClass(Nodes[nodeName], options)
-}
-
-export function getNodeFromClass<T extends typeof Node>(
-  nodeClass: T,
-  props: NodeToOptions<T>,
-): T['prototype'] {
-  return new nodeClass(props)
-}
-
-export const Nodes: NodeClasses = {} as NodeClasses
-
-type NodeClasses = {
+export type NodeClasses = {
   [nodeName]: typeof Node
   [spriteNodeName]: typeof Sprite
   [animationPlayerNodeName]: typeof AnimationPlayer

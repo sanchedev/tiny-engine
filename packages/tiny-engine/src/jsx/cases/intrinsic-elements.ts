@@ -1,12 +1,9 @@
+import { InvalidUseAttributeError } from '../../errors/jsx.js'
 import { Event } from '../../events/event.js'
-import { NODE_REF, type UsedNode } from '../../hooks/node.js'
+import { NODE_REF, type NodeSetter } from '../../hooks/node.js'
 import type { Node } from '../../nodes/node.js'
-import {
-  type NodeTypes,
-  Nodes,
-  type NodesOptions,
-  getNode,
-} from '../../nodes/types.js'
+import { getNode, Nodes } from '../../nodes/registry.js'
+import { type NodeTypes, type NodesOptions } from '../../nodes/types.js'
 import { processTinyNode } from '../tiny-node.js'
 import type { WithChildren } from '../types.js'
 
@@ -29,12 +26,11 @@ export function getNodeFromintrinsicElement<T extends keyof NodeTypes>(
 
 function applyToNode<T extends Node>(node: T, opts: NodeElement<T>): T {
   if (opts.use) {
-    const used = opts.use as T & { [NODE_REF]?: UsedNode<T> }
-    if (used[NODE_REF] && 'node' in used[NODE_REF]) {
-      used[NODE_REF].node = node
-    } else {
-      throw new Error('Only usedsNodes can be set in use property.')
+    const used = opts.use as T & { [NODE_REF]?: NodeSetter }
+    if (typeof used[NODE_REF] !== 'function') {
+      throw new InvalidUseAttributeError(used)
     }
+    used[NODE_REF](node)
   }
 
   applyEvents(node, opts)
