@@ -1,6 +1,6 @@
-import { Game, Scene } from 'tiny-engine'
+import { Game, Scene, sceneRender } from 'tiny-engine'
 
 Game.sceneManager.addScene(
   'test',
-  new Scene(async () => (await import('../envs/one.js')).OneEnv),
+  sceneRender(async () => (await import('../envs/one.js')).OneEnv),
 )

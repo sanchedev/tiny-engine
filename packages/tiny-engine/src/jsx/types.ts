@@ -2,7 +2,7 @@ import type { Node } from '../nodes/node.js'
 import type { NodeTypes } from '../nodes/types.js'
 import type { NodeIntrinsicElements } from './cases/intrinsic-elements.js'
 
-export type TinyNode = undefined | Node | Node[] | TinyNode[]
+export type TinyNode = undefined | null | Node | Node[] | TinyNode[]
 
 export type WithChildren<T> = Omit<T, 'children'> & {
   children?: TinyNode

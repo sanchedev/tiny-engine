@@ -1,9 +1,7 @@
-import { jsx } from '../jsx-runtime.js'
-import { getNodeFromTinyNode } from '../jsx/tiny-node.js'
-import type { TinyType } from '../jsx/types.js'
+import { InvalidSceneRootError } from '../errors/scene.js'
 import { Node } from '../nodes/node.js'
 
-type RenderComponent = TinyType | Promise<TinyType> | Node | Promise<Node>
+type NodeSceneComponent = Node | Promise<Node>
 
 /**
  * The **`Scene`** class creates scenes for the game.
@@ -26,7 +24,7 @@ type RenderComponent = TinyType | Promise<TinyType> | Node | Promise<Node>
 export class Scene {
   constructor(
     /** The **`render`** property is a function that returns a component. */
-    public render: () => RenderComponent,
+    public render: () => NodeSceneComponent,
   ) {}
 
   /** The **`load`** method loads the component and assets. */
@@ -34,7 +32,6 @@ export class Scene {
     const node = await this.render()
 
     if (node instanceof Node) return node
-
-    return getNodeFromTinyNode(jsx(node, {}))
+    throw new InvalidSceneRootError()
   }
 }
