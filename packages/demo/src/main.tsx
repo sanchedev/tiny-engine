@@ -1,3 +1,5 @@
+import './nodes/index.js'
+
 import { Game } from 'tiny-engine'
 import './scenes/test.js'
 

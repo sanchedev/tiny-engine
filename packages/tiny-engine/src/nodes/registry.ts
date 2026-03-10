@@ -16,3 +16,10 @@ export function getNodeFromClass<T extends typeof Node>(
 ): T['prototype'] {
   return new nodeClass(props)
 }
+
+export function registerNode<T extends keyof NodeClasses>(
+  nodeName: T,
+  nodeClass: NodeClasses[T],
+) {
+  Nodes[nodeName] = nodeClass
+}

@@ -22,9 +22,14 @@ export function Peashooter() {
   const { animPlayer, sprite } = usePeashooter()
 
   return (
-    <sprite use={sprite} textureId='peashooter.idle' size={new Vector2(16, 16)}>
-      <animation-player use={animPlayer} />
-    </sprite>
+    <entity>
+      <sprite
+        use={sprite}
+        textureId='peashooter.idle'
+        size={new Vector2(16, 16)}>
+        <animation-player use={animPlayer} />
+      </sprite>
+    </entity>
   )
 }
 

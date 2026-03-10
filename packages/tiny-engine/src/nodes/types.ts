@@ -9,7 +9,7 @@ import type { Text, textNodeName } from './ui/text.js'
 import type { Nodes } from './registry.js'
 import type { Collider, colliderNodeName } from './collider.js'
 
-export type NodeClasses = {
+export interface NodeClasses {
   [nodeName]: typeof Node
   [spriteNodeName]: typeof Sprite
   [animationPlayerNodeName]: typeof AnimationPlayer

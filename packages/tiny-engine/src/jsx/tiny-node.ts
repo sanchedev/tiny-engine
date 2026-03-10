@@ -6,9 +6,7 @@ export function processTinyNode(tinyNode: TinyNode): Node[] {
     return [tinyNode]
   }
   if (Array.isArray(tinyNode)) {
-    return tinyNode
-      .flat(Infinity)
-      .filter((node) => node instanceof Node) as Node[]
+    return tinyNode.flat(10).filter((node) => node instanceof Node) as Node[]
   }
   return []
 }
