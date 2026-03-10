@@ -24,7 +24,9 @@ export type JSXProps<T extends TinyType> = T extends keyof JSX.IntrinsicElements
 
 export type JSXReturn<T extends TinyType> =
   T extends keyof JSX.IntrinsicElements
-    ? NodeTypes[T]
+    ? T extends keyof NodeTypes
+      ? NodeTypes[T]
+      : null
     : T extends (props: any) => TinyNode
       ? TinyNode
       : T extends new (props: any) => Node

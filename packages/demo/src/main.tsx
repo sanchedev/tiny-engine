@@ -1,16 +1,12 @@
+import { createGame } from 'tiny-engine'
 import './nodes/index.js'
 
-import { Game } from 'tiny-engine'
-import './scenes/test.js'
-
-const root = document.querySelector<HTMLElement>('#root')!
-
-Game.setup({
-  width: 160,
-  height: 90,
-  root,
-})
-
-Game.sceneManager.setScene('test')
-
-Game.play()
+createGame(
+  <game
+    width={300}
+    height={150}
+    root={document.querySelector('#root')!}
+    defaultScene='test'>
+    <scene name='test' component={() => import('./scenes/test.js')} />
+  </game>,
+)

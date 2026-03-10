@@ -6,10 +6,21 @@ import { getNode, Nodes } from '../../nodes/registry.js'
 import { type NodeTypes, type NodesOptions } from '../../nodes/types.js'
 import { processTinyNode } from '../tiny-node.js'
 import type { WithChildren } from '../types.js'
+import type { GameOptions } from './special-elements/game.js'
+import type { SceneOptions } from './special-elements/scene.js'
+import { SpecialElements } from './special-elements/specials.js'
 
 export function isIntrinsicElement(obj: any): obj is keyof NodeTypes {
   if (typeof obj !== 'string') return false
   if (!(obj in Nodes)) return false
+  return true
+}
+
+export function isSpecialIntrinsicElement(
+  obj: any,
+): obj is keyof typeof SpecialElements {
+  if (typeof obj !== 'string') return false
+  if (!(obj in SpecialElements)) return false
   return true
 }
 
@@ -22,6 +33,13 @@ export function getNodeFromintrinsicElement<T extends keyof NodeTypes>(
     children: processTinyNode(options.children),
   })
   return applyToNode(node, options)
+}
+
+export function getNodeFromSpecialIntrinsicElement<
+  T extends keyof typeof SpecialElements,
+>(specialName: T, options: NodeIntrinsicElements[T]): null {
+  const special = SpecialElements[specialName](options as any)
+  return special
 }
 
 function applyToNode<T extends Node>(node: T, opts: NodeElement<T>): T {
@@ -79,11 +97,16 @@ export type NodeElement<T extends Node = Node> = {
   use?: T
 } & RecordOfEvents<T>
 
-export type NodeIntrinsicElements = {
+type IntrinsicNodes = {
   [P in keyof NodeTypes]: WithChildren<
     NodesOptions[P] & NodeElement<NodeTypes[P]>
   >
 }
+
+export type NodeIntrinsicElements = {
+  game: GameOptions
+  scene: SceneOptions
+} & IntrinsicNodes
 
 // Event
 

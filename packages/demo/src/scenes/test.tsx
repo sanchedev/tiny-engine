@@ -1,6 +1,12 @@
-import { Game, Scene, sceneRender } from 'tiny-engine'
+import { Peashooter } from '../plants/peashooter.js'
+import { Zombie } from '../zombies/zombie.js'
 
-Game.sceneManager.addScene(
-  'test',
-  sceneRender(async () => (await import('../envs/one.js')).OneEnv),
-)
+export default function Test() {
+  return (
+    <node>
+      <node id='projectiles' />
+      <Peashooter />
+      <Zombie />
+    </node>
+  )
+}
