@@ -8,17 +8,29 @@ type NodeSceneComponent = Node | Promise<Node>
  *
  *
  * @example
+ * **Scene without lazy loading**
  * ```ts
- * // Scene without lazy loading
  * new Scene(
- *   async () => <MainScene />,
+ *   new Node({
+ *     children: [...]
+ *   }),
  * )
  * ```
+ *
+ *
+ * **Scene with lazy loading**
  * ```ts
- * // Scene with lazy loading
  * new Scene(
  *   async () => (await import('./scenes/main.js')).default,
  * )
+ *
+ * // scenes/main.js
+ *
+ * const main = new Node({
+ *   children: [...]
+ * })
+ *
+ * export default main
  * ```
  */
 export class Scene {

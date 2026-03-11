@@ -1,11 +1,5 @@
-import {
-  Collider,
-  GameConfig,
-  loadTexture,
-  useNode,
-  useSignal,
-  Vector2,
-} from 'tiny-engine'
+import { Collider, GameConfig, loadTexture, Vector2 } from 'tiny-engine'
+import { useNode, useSignal } from 'tiny-engine/hooks'
 
 await loadTexture('pea', 'assets/sprites/projectiles/pea.png')
 

@@ -8,6 +8,10 @@
   "exports": {
     ".": "./dist/index.js",
     "./jsx-runtime": "./dist/jsx-runtime.js",
+    "./jsx": "./dist/jsx/index.js",
+    "./jsx/*": "./dist/jsx/*",
+    "./hooks": "./dist/hooks/index.js",
+    "./hooks/*": "./dist/hooks/*",
     "./*": "./dist/*"
   },
   "scripts": {

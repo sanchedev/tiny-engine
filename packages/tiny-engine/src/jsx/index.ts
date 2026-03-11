@@ -1,4 +1,5 @@
-export * from './jsx-node.js'
-export * from './tiny-node.js'
+import '../nodes/index.js'
+
 export * from './types.js'
-export * from './game.js'
+export * from './render/index.js'
+export * from './components/index.js'

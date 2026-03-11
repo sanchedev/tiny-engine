@@ -1,0 +1,128 @@
+import { Game, type GameOptions } from '../components/game.js'
+import { Game as GameP } from '../../core/game.js'
+import { Scene as SceneP } from '../../core/scene.js'
+import type { Tiny } from '../types.js'
+import {
+  getTinyElementFromTinyNode,
+  getTinyNodesFromTinyNode,
+} from '../utils.js'
+import {
+  Scene,
+  type SceneComponent,
+  type SceneOptions,
+} from '../components/scene.js'
+import { renderToNodes } from './to-nodes.js'
+import { Node } from '../../nodes/node.js'
+
+/** The **`createGame`** function creates the game and returns an object with control methods that can be used to play, pause the game, change the scene, etc...
+ *
+ * @example
+ * ```js
+ * const game = createGame(
+ *   <Game width={150} height={75} defaultScene='main'>
+ *     <Scene name='main' component={() => import('./scenes/main.js')} />
+ *   </Game>,
+ *   document.querySelector('#root')
+ * )
+ * ```
+ *
+ * @param jsx The jsx to create the game
+ * @param root Where the canvas will create
+ */
+export function createGame(jsx: Tiny.Node, root: HTMLElement): GameControls {
+  if (root == null) {
+    // TODO: Make a new Error
+    throw new Error('Root does not exist.')
+  }
+
+  const jsxEl = getTinyElementFromTinyNode(jsx)
+  if (jsxEl == null || jsxEl.type !== Game) {
+    // TODO: Make a new Error
+    throw new Error('Game can not works without <Game /> component.')
+  }
+  const { children, defaultScene, ...setupOptions } = jsxEl.props as GameOptions
+
+  GameP.setup({
+    ...setupOptions,
+    root,
+  })
+
+  const scenes = getTinyNodesFromTinyNode(children)
+
+  for (const scene of scenes) {
+    const sceneEl = getTinyElementFromTinyNode(scene)
+    if (sceneEl?.type !== Scene) {
+      // TODO: Make a new Error
+      throw new Error('Scene can not works without <Scene /> component.')
+    }
+
+    const { name, component } = sceneEl.props as SceneOptions
+    GameP.sceneManager.addScene(
+      name,
+      new SceneP(async () => {
+        return await SceneComponentToNode(component)
+      }),
+    )
+  }
+
+  GameP.sceneManager.setScene(defaultScene)
+
+  GameP.play()
+
+  return {
+    play: () => GameP.play(),
+    pause: () => GameP.pause(),
+    changeScene: (name) => {
+      return GameP.sceneManager.setScene(name)
+    },
+    preloadScene: (name) => {
+      return GameP.sceneManager.preloadScene(name)
+    },
+  }
+}
+
+interface GameControls {
+  /**
+   * The **`play`** method starts the game.
+   */
+  play: () => void
+  /**
+   * The **`pause`** method pauses the game.
+   */
+  pause: () => void
+  /**
+   * The **`changeScene`** method sets and loads the scene.
+   */
+  changeScene: (name: string) => Promise<void>
+  /**
+   * The **`preloadScene`** method preloads the scene while the Game is running and returns a function to set this scene when it is loaded.
+   */
+  preloadScene: (name: string) => Promise<() => void>
+}
+
+async function SceneComponentToNode(component: SceneComponent): Promise<Node> {
+  const node = await component()
+
+  let nodesRendered: Node[]
+
+  if (
+    node == null ||
+    typeof node === 'string' ||
+    typeof node === 'number' ||
+    'type' in node
+  ) {
+    nodesRendered = renderToNodes(node)
+  } else if (typeof node === 'function') {
+    nodesRendered = renderToNodes(node())
+  } else if ('default' in node) {
+    nodesRendered = renderToNodes(node.default())
+  } else {
+    nodesRendered = renderToNodes(node)
+  }
+
+  if (nodesRendered.length !== 1 || !(nodesRendered[0] instanceof Node)) {
+    // TODO: Make a new Error
+    throw new Error('A Scene should be a Component to returns a Node.')
+  }
+  return nodesRendered[0]
+}

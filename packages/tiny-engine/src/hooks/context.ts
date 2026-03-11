@@ -1,12 +1,12 @@
 import { HookOutsideComponentError } from '../errors/hook.js'
-import type { TinyNode } from '../jsx/types.js'
+import type { Node } from '../nodes/node.js'
 
 export interface HookContext {
-  node: TinyNode | null
+  node: Node[] | null
   effects: HookEffect[]
 }
 
-type HookEffect = (tinyNode: TinyNode) => void
+type HookEffect = (nodes: Node[]) => void
 
 let currentContext: HookContext[] = []
 
@@ -17,7 +17,7 @@ export function startHooks() {
   })
 }
 
-export function finishHooks(node: TinyNode) {
+export function finishHooks(node: Node[]) {
   if (!currentContext) return
 
   currentContext.at(-1)?.effects.forEach((fn) => fn(node))

@@ -7,13 +7,13 @@ import { Context2DNotSupportedError } from '../errors/env.js'
 import { EngineNotSetupError } from '../errors/lifecycle.js'
 
 interface SetupOptions {
-  /** The width of the canvas. */
+  /** The **`width`** of the canvas. */
   width: number
-  /** The height of the canvas. */
+  /** The **`height`** of the canvas. */
   height: number
-  /** The root element. It will be the parent of the canvas. */
+  /** The **`root element`**. It will be the parent of the canvas. */
   root: HTMLElement
-  /** The defualt `Theme`. */
+  /** The defualt **`Theme`**. */
   theme?: Theme
 }
 

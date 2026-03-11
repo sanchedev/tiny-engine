@@ -3,10 +3,9 @@ import {
   NodeHookTypeMismatchError,
 } from '../errors/hook.js'
 import { NodeNotInitializedError } from '../errors/lifecycle.js'
-import { getNodeFromTinyNode } from '../jsx/tiny-node.js'
 import { Node } from '../nodes/node.js'
 import { Nodes } from '../nodes/registry.js'
-import { type NodeTypes } from '../nodes/types.js'
+import { type NodeInstances } from '../nodes/types.js'
 import { getNodeName } from '../nodes/utils.js'
 import { pushEffect } from './context.js'
 
@@ -53,15 +52,15 @@ export const NODE_REF = Symbol('nodeRef')
  * )
  * ```
  */
-export function useNode<T extends keyof NodeTypes = 'node'>(
+export function useNode<T extends keyof NodeInstances = 'node'>(
   options:
     | {
         nodeType: T
         path?: string
       }
     | T,
-): NodeTypes[T] {
-  const nodeRef: UsedNode<NodeTypes[T]> = {
+): NodeInstances[T] {
+  const nodeRef: UsedNode<NodeInstances[T]> = {
     node: undefined,
   }
 
@@ -76,8 +75,8 @@ export function useNode<T extends keyof NodeTypes = 'node'>(
 
   if (typeof options === 'string') return proxy
 
-  pushEffect('useNode', (tinyNode) => {
-    const node = getNodeFromTinyNode(tinyNode)
+  pushEffect('useNode', (nodes) => {
+    const node = nodes.length === 1 ? nodes[0]! : undefined
     if (node == null) {
       throw new HookRequiresNodeRootError('useNode')
     }

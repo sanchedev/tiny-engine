@@ -1,11 +1,5 @@
-import {
-  loadTexture,
-  kfFromSpriteSheet,
-  Vector2,
-  useNode,
-  useSpawn,
-  useEvent,
-} from 'tiny-engine'
+import { loadTexture, kfFromSpriteSheet, Vector2 } from 'tiny-engine'
+import { useEvent, useNode, useSpawn } from 'tiny-engine/hooks'
 
 import { Pea } from '../projectiles/pea.js'
 

@@ -1,45 +1,74 @@
+import type { Event } from '../events/event.js'
 import type { Node } from '../nodes/node.js'
-import type { NodeTypes } from '../nodes/types.js'
-import type { NodeIntrinsicElements } from './cases/intrinsic-elements.js'
+import type { NodeInstances, NodeName, NodesOptions } from '../nodes/types.js'
 
-export type TinyNode = undefined | null | Node | Node[] | TinyNode[]
+export namespace Tiny {
+  export type Type = keyof JSX.IntrinsicElements | ((props: any) => Node)
 
-export type WithChildren<T> = Omit<T, 'children'> & {
-  children?: TinyNode
-}
+  export interface Element<T extends Type = any> {
+    type: T
+    props: PropsOf<T>
+    // key: string | null
+  }
 
-export type TinyType =
-  | keyof JSX.IntrinsicElements
-  | typeof Node
-  | ((props: any) => TinyNode)
+  export type Node =
+    | Element<any>
+    | string
+    | number
+    | null
+    | undefined
+    | Iterable<Node>
 
-// JSX Function
-export type JSXProps<T extends TinyType> = T extends keyof JSX.IntrinsicElements
-  ? JSX.IntrinsicElements[T]
-  : T extends (props: infer P) => TinyNode
-    ? P
-    : T extends new (props: infer P) => Node
+  export type IntrinsicElements = {
+    [P in NodeName]: IntrinsicElement<P>
+  }
+
+  export type WithChildren<T = {}> = Omit<T, 'children'> & {
+    children?: Node
+  }
+
+  export type PropsOf<T extends Type> = T extends keyof IntrinsicElements
+    ? IntrinsicElements[T]
+    : T extends (props: infer P) => Node
       ? P
       : never
+}
 
-export type JSXReturn<T extends TinyType> =
-  T extends keyof JSX.IntrinsicElements
-    ? T extends keyof NodeTypes
-      ? NodeTypes[T]
-      : null
-    : T extends (props: any) => TinyNode
-      ? TinyNode
-      : T extends new (props: any) => Node
-        ? Node
-        : never
+// Intrinsic Elements
+export type IntrinsicElement<T extends NodeName = 'node'> = {
+  /** The **`use`** property can be user for `useNode` hook.
+   * @example
+   * ```tsx
+   * const sprite = useNode()
+   *
+   * return <sprite use={sprite} />
+   * ```
+   */
+  use?: NodeInstances[T]
+} & RecordOfEvents<NodeInstances[T]> &
+  Tiny.WithChildren<NodesOptions[T]>
+
+// Event
+type RecordOfEvents<T extends Node = Node> = {
+  [P in keyof T as NodeEvent<T, P> extends undefined
+    ? never
+    : EventName<NonNullable<NodeEvent<T, P>>['baseName']>]?: NonNullable<
+    NodeEvent<T, P>
+  >['exampleFun']
+}
+
+type NodeEvent<T extends Node, K extends keyof T> =
+  T[K] extends Event<any[], string> ? T[K] : undefined
+
+type EventName<T extends string> = `on${Capitalize<T>}`
 
 // JSX Declaration
 declare global {
   namespace JSX {
-    type Element = TinyNode
+    type Element = Tiny.Element
 
-    interface IntrinsicElements extends NodeIntrinsicElements {}
+    interface IntrinsicElements extends Tiny.IntrinsicElements {}
 
-    type Nodes = NodeTypes
+    type Nodes = NodeInstances
   }
 }

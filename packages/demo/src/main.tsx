@@ -1,12 +1,12 @@
-import { createGame } from 'tiny-engine'
 import './nodes/index.js'
 
-createGame(
-  <game
-    width={300}
-    height={150}
-    root={document.querySelector('#root')!}
-    defaultScene='test'>
-    <scene name='test' component={() => import('./scenes/test.js')} />
-  </game>,
+import { createGame, Game, Scene } from 'tiny-engine/jsx'
+
+const game = createGame(
+  <Game width={150} height={75} defaultScene='test'>
+    <Scene name='test' component={() => import('./scenes/test.js')} />
+  </Game>,
+  document.querySelector('#root')!,
 )
+
+game.play()

@@ -6,7 +6,6 @@ import type {
 } from './animation-player.js'
 import type { View, viewNodeName } from './ui/view.js'
 import type { Text, textNodeName } from './ui/text.js'
-import type { Nodes } from './registry.js'
 import type { Collider, colliderNodeName } from './collider.js'
 
 export interface NodeClasses {
@@ -19,12 +18,16 @@ export interface NodeClasses {
   [textNodeName]: typeof Text
 }
 
+export type NodeName = keyof NodeClasses
+
+type a<T extends Node> = new (options: NodeToOptions<typeof Node>) => T
+
 export type NodesOptions = {
-  [P in keyof typeof Nodes]: NodeToOptions<(typeof Nodes)[P]>
+  [P in NodeName]: NodeToOptions<NodeClasses[P]>
 }
 
-export type NodeTypes = {
-  [P in keyof typeof Nodes]: (typeof Nodes)[P]['prototype']
+export type NodeInstances = {
+  [P in NodeName]: InstanceType<NodeClasses[P]>
 }
 
 export type NodeToOptions<T extends typeof Node> = ConstructorParameters<T>[0]

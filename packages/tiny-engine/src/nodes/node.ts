@@ -1,7 +1,7 @@
 import { Vector2 } from '../math/vector2.js'
 import { GameConfig } from '../core/game-config.js'
 import { Event } from '../events/event.js'
-import { type NodeTypes } from './types.js'
+import { type NodeInstances } from './types.js'
 import { Game } from '../core/game.js'
 import { Signal } from '../reactivity/signal.js'
 import {
@@ -377,10 +377,10 @@ export class Node {
    * const box = node.getChild({ nodeType: 'node', path: '/box' })
    * ```
    */
-  getChild<T extends keyof NodeTypes>(options: {
+  getChild<T extends keyof NodeInstances>(options: {
     nodeType: T
     path?: string
-  }): NodeTypes[T] {
+  }): NodeInstances[T] {
     const { nodeType, path } = options
 
     if (!(nodeType in Nodes)) {
@@ -426,7 +426,7 @@ export class Node {
     if (!(node instanceof Nodes[nodeType])) {
       throw new NodeTypeMismatchError(nodeType, getNodeName(node))
     }
-    return node as NodeTypes[T]
+    return node as NodeInstances[T]
   }
 
   /**
