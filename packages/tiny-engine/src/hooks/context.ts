@@ -1,14 +1,16 @@
 import { HookOutsideComponentError } from '../errors/hook.js'
 import type { Node } from '../nodes/node.js'
+import type { Context } from './use-context.js'
 
 export interface HookContext {
   node: Node[] | null
   effects: HookEffect[]
+  context?: Context<any>
 }
 
-type HookEffect = (nodes: Node[]) => void
+type HookEffect = (nodes: Node[], currentContext: HookContext[]) => void
 
-let currentContext: HookContext[] = []
+export let currentContext: HookContext[] = []
 
 export function startHooks() {
   currentContext.push({
@@ -20,7 +22,7 @@ export function startHooks() {
 export function finishHooks(node: Node[]) {
   if (!currentContext) return
 
-  currentContext.at(-1)?.effects.forEach((fn) => fn(node))
+  currentContext.at(-1)?.effects.forEach((fn) => fn(node, currentContext))
   currentContext.pop()
 }
 
