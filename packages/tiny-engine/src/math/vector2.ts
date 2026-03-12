@@ -116,4 +116,51 @@ export class Vector2 {
 
     return vector2
   }
+
+  /**
+   * The **`multiply`** method multiplies other vector to this vector.
+   * @param vector2
+   */
+  multiply(vector2: Vector2): Vector2
+  /**
+   * The **`multiply`** method multiplies a number to `x` and `y` of this vector.
+   * @param vector2
+   */
+  multiply(num: number): Vector2
+  multiply(arg: Vector2 | number): Vector2 {
+    if (arg instanceof Vector2) {
+      this.x *= arg.x
+      this.y *= arg.y
+    }
+    if (typeof arg === 'number') {
+      this.x *= arg
+      this.y *= arg
+    }
+
+    return this
+  }
+
+  /**
+   * The **`toMultiplied`** method clones this vector and multiplies other vector to the clone.
+   * @param vector2
+   */
+  toMultiplied(vector2: Vector2): Vector2
+  /**
+   * The **`toMultiplied`** method clones this vector and multiplies a number to `x` and `y` of the clone.
+   * @param vector2
+   */
+  toMultiplied(num: number): Vector2
+  toMultiplied(arg: Vector2 | number): Vector2 {
+    const vector2 = this.clone()
+    if (arg instanceof Vector2) {
+      vector2.x *= arg.x
+      vector2.y *= arg.y
+    }
+    if (typeof arg === 'number') {
+      vector2.x *= arg
+      vector2.y *= arg
+    }
+
+    return vector2
+  }
 }
