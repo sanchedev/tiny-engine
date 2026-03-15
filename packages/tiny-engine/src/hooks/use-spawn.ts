@@ -3,7 +3,7 @@ import { NodeNotInitializedError } from '../errors/lifecycle.js'
 import { renderToNodes } from '../jsx/index.js'
 import type { Tiny } from '../jsx/types.js'
 import type { Node } from '../nodes/node.js'
-import { pushEffect } from './context.js'
+import { currentContext, pushEffect } from './context.js'
 
 /**
  * The **`useSpawn`** hooks returns a function that can spawn nodes as children of the node that calls the hook.
@@ -48,11 +48,17 @@ import { pushEffect } from './context.js'
 export function useSpawn(node?: Node) {
   let nodeRef: Node | undefined = node
 
+  const ctx = currentContext.slice()
+
   const spawn = (jsx: Tiny.Node) => {
     if (nodeRef == null)
       throw new NodeNotInitializedError(node ? 'Unknown' : 'Root')
 
+    currentContext.push(...ctx)
     const nodes = renderToNodes(jsx)
+    for (let i = 0; i < ctx.length; i++) {
+      currentContext.pop()
+    }
 
     nodeRef.addChild(...nodes)
   }
