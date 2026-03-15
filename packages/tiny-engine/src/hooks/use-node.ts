@@ -13,6 +13,8 @@ interface UsedNode<T extends Node> {
   node: T | undefined
 }
 
+export type NodeRef<T extends Node> = T & { [NODE_REF]: NodeSetter }
+
 export type NodeSetter = (node: Node) => void
 
 export const NODE_REF = Symbol('nodeRef')
@@ -59,7 +61,7 @@ export function useNode<T extends keyof NodeInstances = 'node'>(
         path?: string
       }
     | T,
-): NodeInstances[T] {
+): NodeRef<NodeInstances[T]> {
   const nodeRef: UsedNode<NodeInstances[T]> = {
     node: undefined,
   }
@@ -129,5 +131,5 @@ function createNodeProxy<T extends Node>(
       node[prop as keyof typeof node] = value
       return true
     },
-  }) as unknown as T
+  }) as unknown as NodeRef<T>
 }

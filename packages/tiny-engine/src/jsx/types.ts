@@ -1,4 +1,5 @@
 import type { Event } from '../events/event.js'
+import type { NodeRef } from '../hooks/use-node.js'
 import type { Node } from '../nodes/node.js'
 import type { NodeInstances, NodeName, NodesOptions } from '../nodes/types.js'
 
@@ -44,7 +45,7 @@ export type IntrinsicElement<T extends NodeName = 'node'> = {
    * return <sprite use={sprite} />
    * ```
    */
-  use?: NodeInstances[T]
+  use?: NodeRef<NodeInstances[T]>
 } & RecordOfEvents<NodeInstances[T]> &
   Tiny.WithChildren<NodesOptions[T]>
 
