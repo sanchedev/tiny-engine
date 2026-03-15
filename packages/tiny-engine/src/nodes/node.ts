@@ -521,7 +521,8 @@ export class Node {
     this.destroyed.emit()
 
     this.cleanEvents()
-    for (const node of this._children) {
+
+    for (const node of [...this._children]) {
       node.destroy()
     }
   }
