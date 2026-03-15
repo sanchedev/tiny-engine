@@ -8,13 +8,15 @@
     "engine:build": "pnpm --filter tiny-engine build",
     "engine:dev": "pnpm --filter tiny-engine dev",
     "demo:build": "pnpm --filter pxvz-demo build",
-    "demo:dev": "pnpm --filter pxvz-demo dev"
+    "demo:dev": "pnpm --filter pxvz-demo dev",
+    "dev": "concurrently \"pnpm engine:dev\" \"pnpm demo:dev\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.29.3",
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "typescript": "^5.9.3"
   }
 }
