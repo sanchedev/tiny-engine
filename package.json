@@ -7,8 +7,9 @@
   "scripts": {
     "engine:build": "pnpm --filter tiny-engine build",
     "engine:dev": "pnpm --filter tiny-engine dev",
-    "demo:build": "pnpm --filter pxvz-demo build",
-    "demo:dev": "pnpm --filter pxvz-demo dev",
+    "demo:start": "pnpm --filter demo start",
+    "demo:build": "pnpm --filter demo build",
+    "demo:dev": "pnpm --filter demo dev",
     "dev": "concurrently \"pnpm engine:dev\" \"pnpm demo:dev\""
   },
   "keywords": [],

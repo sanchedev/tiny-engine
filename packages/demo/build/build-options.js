@@ -1,6 +1,5 @@
-import esbuild from 'esbuild'
-
-const ctx = await esbuild.context({
+/** @type {import("esbuild").BuildOptions} */
+export const buildOptions = {
   entryPoints: ['src/main.tsx'],
   bundle: true,
   outfile: 'dist/bundle.js',
@@ -14,8 +13,4 @@ const ctx = await esbuild.context({
     '.tsx': 'tsx',
   },
   jsx: 'automatic',
-})
-
-await ctx.watch()
-
-console.log('watching...')
+}
