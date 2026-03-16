@@ -21,6 +21,7 @@ body {
   max-width: calc(100vh * var(--width) / var(--height));
   max-height: calc(100vw * var(--height) / var(--width));
   image-rendering: pixelated;
+  overflow: hidden;
 }
 
 canvas {
