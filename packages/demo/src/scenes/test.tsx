@@ -1,12 +1,10 @@
-import { loadTexture } from 'tiny-engine'
-import { Board } from '../components/board.js'
-
-await loadTexture('bg-day', '/assets/sprites/backgrounds/day.png')
+import { Vector2 } from 'tiny-engine'
+import { Player } from '../components/player'
 
 export default function Test() {
   return (
-    <sprite textureId='bg-day'>
-      <Board />
-    </sprite>
+    <node>
+      <Player initialPosition={Vector2.ZERO} />
+    </node>
   )
 }
