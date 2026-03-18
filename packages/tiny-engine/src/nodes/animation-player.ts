@@ -98,6 +98,11 @@ export class AnimationPlayer extends Node {
    * ```
    */
   play(animName: string, index?: number) {
+    if (
+      this.#currentAnim === animName &&
+      (index == null || Math.floor(this.#index) === index)
+    )
+      return
     if (this.#currentAnim != null) this.stop()
     const oldAnim = this.#currentAnim
     this.#index = index ?? 0
