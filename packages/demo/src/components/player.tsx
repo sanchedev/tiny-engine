@@ -1,4 +1,4 @@
-import { kfFromSpriteSheet, loadTexture, Vector2 } from 'tiny-engine'
+import { Game, kfFromSpriteSheet, loadTexture, Vector2 } from 'tiny-engine'
 import { useEvent, useNode } from 'tiny-engine/hooks'
 
 interface PlayerProps {
@@ -47,10 +47,31 @@ export function Player({ initialPosition }: PlayerProps) {
           fps: 4,
           keyframes: kfFromSpriteSheet(player, 'player.fall', 2),
         })
-
-      animPlayer.play('idle')
     },
     () => player.started,
+  )
+
+  useEvent(
+    (delta) => {
+      const xAxis = Game.input.getKeyAxis('d', 'a')
+      const yAxis = Game.input.getKeyAxis('s', 'w')
+
+      const direction = new Vector2(xAxis, yAxis)
+
+      const velocity = direction
+        .clone()
+        .multiply(delta * 10)
+        .normalize()
+
+      player.position.add(velocity)
+
+      if (direction.x === 0 && direction.y === 0) {
+        animPlayer.play('idle')
+      } else {
+        animPlayer.play('walk')
+      }
+    },
+    () => player.updated,
   )
 
   return (
