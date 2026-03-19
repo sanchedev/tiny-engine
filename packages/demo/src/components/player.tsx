@@ -1,5 +1,5 @@
 import { Game, kfFromSpriteSheet, loadTexture, Vector2 } from 'tiny-engine'
-import { useEvent, useNode } from 'tiny-engine/hooks'
+import { useEvent, useNode, useSignal } from 'tiny-engine/hooks'
 
 interface PlayerProps {
   initialPosition: Vector2
@@ -15,6 +15,8 @@ await loadTexture('player.fall', '/assets/sprites/player/fall.png')
 export function Player({ initialPosition }: PlayerProps) {
   const player = useNode('sprite')
   const animPlayer = useNode('animation-player')
+
+  const flipX = useSignal(false)
 
   useEvent(
     () => {
@@ -65,6 +67,12 @@ export function Player({ initialPosition }: PlayerProps) {
 
       player.position.add(velocity)
 
+      if (xAxis > 0) {
+        flipX.value = false
+      } else if (xAxis < 0) {
+        flipX.value = true
+      }
+
       if (direction.x === 0 && direction.y === 0) {
         animPlayer.play('idle')
       } else {
@@ -79,7 +87,8 @@ export function Player({ initialPosition }: PlayerProps) {
       use={player}
       textureId='player.idle'
       position={initialPosition}
-      size={new Vector2(64, 64)}>
+      size={new Vector2(64, 64)}
+      flipX={flipX}>
       <animation-player use={animPlayer} />
     </sprite>
   )
