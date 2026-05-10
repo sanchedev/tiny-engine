@@ -477,6 +477,42 @@ export class Node implements NodeEvents {
     this._children.sort((a, b) => a.globalZIndex - b.globalZIndex)
   }
 
+  // Tools to develop custom nodes
+  /**
+   * The **`build`** method can be used to place nodes in the children when you create a custom node by extending the `Node` class. It is called before the start of the node.
+   *
+   * @example
+   * ```ts
+   * class CustomNode extends Node {
+   *   build() {
+   *     return [
+   *       new Node({ id: 'child1' }),
+   *       new Node({ id: 'child2' }),
+   *     ]
+   *   }
+   * }
+   * ```
+   *
+   * If you are using jsx, you can use it like this:
+   * ```jsx
+   * class CustomNode extends Node {
+   *   build() {
+   *     return (
+   *       <>
+   *         <node id='child1' />
+   *         <node id='child2' />
+   *       </>
+   *     )
+   *   }
+   * }
+   * ```
+   *
+   * The `build` method can return a `Node` or an array of `Node`s. If it returns a `Node`, it will be added as a child of the current node. If it returns an array of `Node`s, all of them will be added as children of the current node.
+   *
+   * @returns A `Node` or an array of `Node`s to be added as children of the current node.
+   */
+  build?(): Node | Node[]
+
   // Events
   zIndexChanged = new Event('zIndexChange', (zIndex: number) => {})
   started = new Event('start', () => {})
@@ -486,6 +522,15 @@ export class Node implements NodeEvents {
 
   // Lifecycle methods
   start(): void {
+    if (this.isStarted) return
+
+    const built = this.build?.()
+    if (built instanceof Node) {
+      this.addChild(built)
+    } else if (Array.isArray(built)) {
+      this.addChild(...built)
+    }
+
     for (const child of this._children) {
       this.#attachChild(child)
     }
