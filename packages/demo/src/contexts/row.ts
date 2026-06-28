@@ -4,12 +4,14 @@ export interface RowContext {
   projectilesLayer: string
   plantsLayer: string
   zombiesLayer: string
+  rowIndex: number
 }
 
 export const RowCtx = createContext<RowContext>({
   projectilesLayer: 'projectile-??',
   plantsLayer: 'plant-??',
   zombiesLayer: 'zombie-??',
+  rowIndex: -1,
 })
 
 export interface RowSpawnersContext {

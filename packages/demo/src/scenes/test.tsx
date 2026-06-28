@@ -9,7 +9,7 @@ export default function Test() {
       <sprite textureId={BG_DAY_4} displaySize={new Vector2(288, 112)} />
       <Board
         position={new Vector2(40, 24)}
-        cellSize={new Vector2(64, 64)}
+        cellSize={new Vector2(16, 16)}
         cellsCount={new Vector2(9, 5)}
       />
     </transform>

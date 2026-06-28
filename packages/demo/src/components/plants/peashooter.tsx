@@ -2,17 +2,21 @@ import {
   kfFromSpriteSheet,
   loadTexture,
   PrimaryNode,
+  shapes,
   Vector2,
 } from 'tiny-engine'
-import type { PlantProps } from '../types.js'
+import type { InRowProps } from '../types.js'
 import {
-  useEffect,
+  useContext,
   useEvent,
+  useGame,
   useMount,
   useRefNode,
   useSignal,
 } from 'tiny-engine/hooks'
-import { PeashooterScript } from '../../scripts/peashooter.js'
+import { PeashooterScript } from '../../scripts/plant/peashooter.js'
+import { RowCtx, RowSpawnersCtx } from '../../contexts/row.js'
+import { Pea } from '../projectiles/pea.js'
 
 const PEASHOOTER_IDLE = await loadTexture(
   '/assets/sprites/plants/peashooter/idle.png',
@@ -21,11 +25,17 @@ const PEASHOOTER_SHOOT = await loadTexture(
   '/assets/sprites/plants/peashooter/shoot.png',
 )
 
-interface PeashooterProps extends PlantProps {}
+interface PeashooterProps extends InRowProps {}
 
 export function Peashooter({ position }: PeashooterProps) {
+  const { plantsLayer, zombiesLayer } = useContext(RowCtx)
+  const { spawnProjectile } = useContext(RowSpawnersCtx)
+
   const sprite = useRefNode(PrimaryNode.Sprite)
   const anim = useRefNode(PrimaryNode.AnimationPlayer)
+  const raycast = useRefNode(PrimaryNode.RayCast)
+
+  const width = useGame().getSize().x
 
   const isZombieDetected = useSignal(false)
 
@@ -44,13 +54,26 @@ export function Peashooter({ position }: PeashooterProps) {
       .play('idle')
   })
 
-  useEffect(() => {
-    anim.node.setNext(isZombieDetected.value ? 'shoot' : 'idle')
-  }, [isZombieDetected])
-
   useEvent(anim, 'animationEnded', () => {
-    isZombieDetected.value = !isZombieDetected.value
+    anim.node.setNext(isZombieDetected.value ? 'shoot' : 'idle')
   })
+
+  useEvent(anim, 'animationIndexChanged', (index) => {
+    if (anim.node.currentAnim !== 'shoot') return
+    if (index === 1) shoot()
+  })
+
+  useEvent(raycast, 'colliderEntered', () => {
+    isZombieDetected.value = true
+  })
+
+  useEvent(raycast, 'colliderExited', () => {
+    isZombieDetected.value = false
+  })
+
+  const shoot = () => {
+    spawnProjectile(<Pea position={new Vector2(10, 8)} />)
+  }
 
   return (
     <transform position={position} script={new PeashooterScript()}>
@@ -60,6 +83,24 @@ export function Peashooter({ position }: PeashooterProps) {
         sourceSize={new Vector2(16, 16)}>
         <animation-player ref={anim} />
       </sprite>
+      <ray-cast
+        ref={raycast}
+        position={new Vector2(8, 10)}
+        direction={new Vector2(100, 0)}
+        collidesWith={[zombiesLayer]}
+        onStart={() =>
+          (raycast.node.direction = new Vector2(
+            width - raycast.node.globalPosition.x,
+            0,
+          ))
+        }
+      />
+      <collider
+        group={[plantsLayer]}
+        collidesWith={[]}
+        shape={shapes.rectangle(7, 9)}
+        position={new Vector2(4, 7)}
+      />
     </transform>
   )
 }
