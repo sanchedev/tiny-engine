@@ -14,8 +14,20 @@ export class GameConfig {
   /** The `theme` of the `Game` */
   static theme: Theme
 
+  /** The `testOptions` of the `Game` */
+  static testOptions: TestOptions
+
   /** The `translate` represents the global translation of the `Game` */
   static translate = Vector2.ZERO
+}
+
+export interface TestOptions {
+  showColliders: boolean
+  showRayCasts: boolean
+}
+const defaultTestOptions: TestOptions = {
+  showColliders: false,
+  showRayCasts: false,
 }
 
 interface GCO {
@@ -24,12 +36,21 @@ interface GCO {
   width: number
   height: number
   theme: Theme
+  testOptions?: Partial<TestOptions>
 }
 
-export function _set_gc({ canvas, ctx, width, height, theme }: GCO) {
+export function _set_gc({
+  canvas,
+  ctx,
+  width,
+  height,
+  theme,
+  testOptions = {},
+}: GCO) {
   GameConfig.canvas = canvas
   GameConfig.ctx = ctx
   GameConfig.width = width
   GameConfig.height = height
+  GameConfig.testOptions = { ...defaultTestOptions, ...testOptions }
   GameConfig.theme = theme
 }

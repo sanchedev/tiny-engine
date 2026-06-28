@@ -1,12 +1,13 @@
 import { SceneManager } from './scene-manager.js'
 import { Theme } from './theme.js'
-import { _set_gc, GameConfig } from './game-config.js'
+import { _set_gc, GameConfig, type TestOptions } from './game-config.js'
 import { getDPRFromCtx } from '../utils/dpr.js'
 import { Event } from '../events/event.js'
 import { Context2DNotSupportedError } from '../errors/env.js'
 import { EngineNotSetupError } from '../errors/lifecycle.js'
 import { Input } from '../input/input.js'
 import { Vector2 } from '../math/vector2.js'
+import { CollisionSystem } from '../collision/collision-system.js'
 
 interface SetupOptions {
   /** The **`width`** of the canvas. */
@@ -15,6 +16,8 @@ interface SetupOptions {
   height: number
   /** The **`root element`**. It will be the parent of the canvas. */
   root: HTMLElement
+  /** The **`testOptions`** of the game. */
+  testOptions?: Partial<TestOptions>
   /** The defualt **`Theme`**. */
   theme?: Theme
 }
@@ -71,6 +74,7 @@ export class Game {
       ctx: ctx,
       width: options.width,
       height: options.height,
+      testOptions: options.testOptions,
       theme: options.theme ?? new Theme(),
     })
 
@@ -170,6 +174,7 @@ export class Game {
       }
 
       node.update(delta)
+      CollisionSystem.update(delta)
       node.draw(delta)
     }
 
