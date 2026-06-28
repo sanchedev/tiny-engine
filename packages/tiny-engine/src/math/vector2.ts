@@ -9,6 +9,22 @@ export class Vector2 {
     return new Vector2(1, 1)
   }
 
+  /**
+   * The **`fromJSON`** method creates a `Vector2` from a `Position` object.
+   * @param position The position object with `x` and `y` properties.
+   * @returns A new `Vector2` instance.
+   *
+   * @example
+   * ```ts
+   * const vec = Vector2.fromJSON({ x: 10, y: 20 })
+   * vec.x // 10
+   * vec.y // 20
+   * ```
+   */
+  static fromJSON(position: Position): Vector2 {
+    return new Vector2(position.x, position.y)
+  }
+
   constructor(
     /** The **`x`** property of `Vector2` represents the x-coordinate. */
     public x: number,
@@ -164,6 +180,33 @@ export class Vector2 {
     return vector2
   }
 
+  /**
+   * The **`equals`** method checks if this vector has the same x and y values as another vector.
+   * @param vector2 The vector to compare with.
+   * @returns `true` if both components are equal, `false` otherwise.
+   *
+   * @example
+   * ```ts
+   * const a = new Vector2(1, 2)
+   * const b = new Vector2(1, 2)
+   * a.equals(b) // true
+   * ```
+   */
+  equals(vector2: Vector2): boolean {
+    return this.x === vector2.x && this.y === vector2.y
+  }
+
+  /**
+   * The **`normalize`** method scales this vector to unit length (magnitude of 1).
+   * If the vector is zero, it remains zero.
+   * @returns This vector for chaining.
+   *
+   * @example
+   * ```ts
+   * const dir = new Vector2(3, 4)
+   * dir.normalize() // magnitude is now 1
+   * ```
+   */
   normalize() {
     const length = Math.sqrt(this.x * this.x + this.y * this.y)
     if (length > 0) {
@@ -173,4 +216,32 @@ export class Vector2 {
 
     return this
   }
+
+  /**
+   * The **`toJSON`** method converts this vector to a plain `Position` object.
+   * @returns A `Position` object with `x` and `y` properties.
+   *
+   * @example
+   * ```ts
+   * const pos = new Vector2(10, 20)
+   * pos.toJSON() // { x: 10, y: 20 }
+   * ```
+   */
+  toJSON(): Position {
+    return {
+      x: this.x,
+      y: this.y,
+    }
+  }
+}
+
+/**
+ * The **`Position`** interface represents a 2D point with `x` and `y` coordinates.
+ * Used as a lightweight alternative to `Vector2` when methods are not needed.
+ */
+export interface Position {
+  /** The x-coordinate. */
+  x: number
+  /** The y-coordinate. */
+  y: number
 }
