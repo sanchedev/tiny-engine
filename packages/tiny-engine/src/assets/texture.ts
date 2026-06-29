@@ -35,6 +35,7 @@ export class Texture {
 
     const pos = options.position.toMultiplied(new Vector2(scaleX, scaleY))
 
+    GameConfig.ctx.save()
     GameConfig.ctx.scale(scaleX, scaleY)
     GameConfig.ctx.drawImage(
       this.image,
@@ -47,7 +48,7 @@ export class Texture {
       rWidth,
       rHeight,
     )
-    GameConfig.ctx.scale(scaleX, scaleY)
+    GameConfig.ctx.restore()
   }
 }
 
