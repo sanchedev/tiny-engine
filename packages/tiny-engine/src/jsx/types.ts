@@ -36,6 +36,8 @@ export namespace Tiny {
     : T extends (props: infer P) => Node
       ? P
       : never
+
+  export type Component<P = {}> = (props: P) => Node
 }
 
 // Intrinsic Elements

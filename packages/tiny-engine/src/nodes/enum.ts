@@ -8,7 +8,7 @@
  * import { PrimaryNode } from 'tiny-engine/nodes/enum'
  *
  * const sprite = useRefNode(PrimaryNode.Sprite)
- * return <sprite ref={sprite} textureId="player" />
+ * return <sprite ref={sprite} textureId={PLAYER} />
  * ```
  */
 export enum PrimaryNode {
@@ -22,4 +22,8 @@ export enum PrimaryNode {
   Collider = 'collider',
   /** A node that projects a ray to detect colliders along a direction. */
   RayCast = 'ray-cast',
+  /** A node that detects click events. */
+  Clickable = 'clickable',
+  /** A node for use time functions. */
+  Timer = 'timer',
 }

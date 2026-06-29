@@ -10,6 +10,8 @@ import type { RayCast, RayCastOptions } from '../collision/ray-cast.js'
 import type { Event } from '../events/event.js'
 import type { EventName } from '../events/types.js'
 import type { PrimaryNode } from './enum.js'
+import type { Clickable, ClickableOptions } from './clickable.js'
+import type { Timer, TimerOptions } from './timer.js'
 
 /**
  * The **`NodeClasses`** interface maps each `PrimaryNode` to its class constructor.
@@ -21,6 +23,8 @@ export interface NodeClasses {
   [PrimaryNode.AnimationPlayer]: typeof AnimationPlayer
   [PrimaryNode.Collider]: typeof Collider
   [PrimaryNode.RayCast]: typeof RayCast
+  [PrimaryNode.Clickable]: typeof Clickable
+  [PrimaryNode.Timer]: typeof Timer
 }
 
 /**
@@ -33,6 +37,8 @@ export interface NodesOptions {
   [PrimaryNode.AnimationPlayer]: AnimationPlayerOptions
   [PrimaryNode.Collider]: ColliderOptions
   [PrimaryNode.RayCast]: RayCastOptions
+  [PrimaryNode.Clickable]: ClickableOptions
+  [PrimaryNode.Timer]: TimerOptions
 }
 
 type NodeName = keyof NodeClasses
