@@ -1,5 +1,5 @@
 import { HookOutsideComponentError } from '../errors/hook.js'
-import type { Node } from '../nodes/node.js'
+import type { Node } from '../nodes/_node.js'
 import type { Context } from './use-context.js'
 
 export interface HookContext {

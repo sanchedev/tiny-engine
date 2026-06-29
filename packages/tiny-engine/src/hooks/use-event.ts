@@ -1,8 +1,8 @@
 import { InvalidEventHookResultError } from '../errors/hook.js'
 import { Event } from '../events/event.js'
 import type { Fun } from '../events/types.js'
-import type { PrimaryNode } from '../nodes/enum.js'
-import type { NodeInstances } from '../nodes/types.js'
+import type { PrimaryNode } from '../nodes/lib/enum.js'
+import type { NodeInstances } from '../nodes/lib/types.js'
 import { pushEffect } from './context.js'
 import type { NodeReference } from './use-ref-node.js'
 

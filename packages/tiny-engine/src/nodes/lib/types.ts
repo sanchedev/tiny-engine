@@ -1,17 +1,17 @@
-import type { Node } from './node.js'
-import type { Transform, TransformOptions } from './transform.js'
-import type { Sprite, SpriteOptions } from './sprite.js'
+import type { Node } from '../_node.js'
+import type { Transform, TransformOptions } from '../node2d/transform.js'
+import type { Sprite, SpriteOptions } from '../node2d/sprite.js'
 import type {
   AnimationPlayer,
   AnimationPlayerOptions,
-} from './animation-player.js'
-import type { Collider, ColliderOptions } from '../collision/collider.js'
-import type { RayCast, RayCastOptions } from '../collision/ray-cast.js'
-import type { Event } from '../events/event.js'
-import type { EventName } from '../events/types.js'
+} from '../animation-player.js'
+import type { Collider, ColliderOptions } from '../node2d/collider.js'
+import type { RayCast, RayCastOptions } from '../node2d/ray-cast.js'
+import type { Event } from '../../events/event.js'
+import type { EventName } from '../../events/types.js'
 import type { PrimaryNode } from './enum.js'
-import type { Clickable, ClickableOptions } from './clickable.js'
-import type { Timer, TimerOptions } from './timer.js'
+import type { Clickable, ClickableOptions } from '../node2d/clickable.js'
+import type { Timer, TimerOptions } from '../timer.js'
 
 /**
  * The **`NodeClasses`** interface maps each `PrimaryNode` to its class constructor.

@@ -1,5 +1,5 @@
 import { InvalidSceneRootError } from '../errors/scene.js'
-import { Node } from '../nodes/node.js'
+import { Node } from '../nodes/_node.js'
 
 type NodeSceneComponent = Node | Promise<Node>
 

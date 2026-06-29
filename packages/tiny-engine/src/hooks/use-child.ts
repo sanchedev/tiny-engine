@@ -1,5 +1,5 @@
 import { HookRequiresNodeRootError } from '../errors/hook.js'
-import type { PrimaryNode } from '../nodes/enum.js'
+import type { PrimaryNode } from '../nodes/lib/enum.js'
 import { pushEffect } from './context.js'
 import { NodeReference } from './use-ref-node.js'
 

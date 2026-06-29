@@ -1,4 +1,4 @@
-import { Nodes } from '../nodes/registry.js'
+import { Nodes } from '../nodes/lib/registry.js'
 import { TinyEngineError } from './base.js'
 
 /**

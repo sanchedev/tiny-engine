@@ -1,6 +1,6 @@
 import { renderToNodes } from '../jsx/index.js'
 import type { Tiny } from '../jsx/types.js'
-import type { PrimaryNode } from '../nodes/enum.js'
+import type { PrimaryNode } from '../nodes/lib/enum.js'
 import { currentContext, pushEffect } from './context.js'
 import type { NodeReference } from './use-ref-node.js'
 

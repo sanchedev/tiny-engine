@@ -1,4 +1,4 @@
-import type { Collider } from '../collider.js'
+import type { Collider } from '../../nodes/node2d/collider.js'
 
 /**
  * The **`Narrowphase`** class performs precise collision detection between two colliders.
@@ -38,7 +38,8 @@ export class Narrowphase {
   }
 
   static #rectangleOverlap(a: Collider, b: Collider): boolean {
-    if (a.shape.type !== 'rectangle' || b.shape.type !== 'rectangle') return false
+    if (a.shape.type !== 'rectangle' || b.shape.type !== 'rectangle')
+      return false
     const fromA = a.globalPosition
     const toA = fromA.toAdded(a.shape.size)
     const fromB = b.globalPosition
@@ -58,8 +59,12 @@ export class Narrowphase {
     return distSq < radiusSum * radiusSum
   }
 
-  static #rectangleCircleOverlap(rectangle: Collider, circle: Collider): boolean {
-    if (rectangle.shape.type !== 'rectangle' || circle.shape.type !== 'circle') return false
+  static #rectangleCircleOverlap(
+    rectangle: Collider,
+    circle: Collider,
+  ): boolean {
+    if (rectangle.shape.type !== 'rectangle' || circle.shape.type !== 'circle')
+      return false
     const rectFrom = rectangle.globalPosition
     const rectTo = rectFrom.toAdded(rectangle.shape.size)
     const cx = circle.globalPosition.x

@@ -1,4 +1,4 @@
-import type { Collider } from '../collider.js'
+import type { Collider } from '../../nodes/node2d/collider.js'
 import type { CollisionBounds } from '../types.js'
 
 /**

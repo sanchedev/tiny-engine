@@ -1,6 +1,6 @@
-import { InvalidNodeInstanceError } from '../errors/node.js'
+import { InvalidNodeInstanceError } from '../../errors/node.js'
 import type { PrimaryNode } from './enum.js'
-import type { Node } from './node.js'
+import type { Node } from '../_node.js'
 import { Nodes } from './registry.js'
 import type { NodeInstances } from './types.js'
 

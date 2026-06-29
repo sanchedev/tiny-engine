@@ -1,6 +1,6 @@
 import { Vector2 } from '../math/vector2.js'
-import type { Collider } from './collider.js'
-import type { RayCast } from './ray-cast.js'
+import type { Collider } from '../nodes/node2d/collider.js'
+import type { RayCast } from '../nodes/node2d/ray-cast.js'
 import { SpatialHash } from './broadphase/spatial-hash.js'
 import { Narrowphase } from './narrowphase/detector.js'
 import { CollisionEmitter } from './events/collision-emitter.js'
@@ -332,5 +332,4 @@ export class CollisionSystem {
         }
     }
   }
-
 }

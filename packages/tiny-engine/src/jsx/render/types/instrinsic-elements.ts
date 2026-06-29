@@ -1,8 +1,8 @@
-import { type NodeInstances } from '../../../nodes/types.js'
-import { Nodes } from '../../../nodes/registry.js'
+import { type NodeInstances } from '../../../nodes/lib/types.js'
+import { Nodes } from '../../../nodes/lib/registry.js'
 import { Event, getEventName } from '../../../events/event.js'
 import type { IntrinsicElement } from '../../types.js'
-import type { PrimaryNode } from '../../../nodes/enum.js'
+import type { PrimaryNode } from '../../../nodes/lib/enum.js'
 
 export function isIntrinsicElement(obj: any): obj is PrimaryNode {
   if (typeof obj !== 'string') return false

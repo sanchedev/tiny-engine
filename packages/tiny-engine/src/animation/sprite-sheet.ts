@@ -1,7 +1,7 @@
 import { getTexture } from '../assets/texture.js'
 import { Vector2 } from '../math/vector2.js'
 import type { AnimationKeyframe } from '../nodes/animation-player.js'
-import type { Sprite } from '../nodes/sprite.js'
+import type { Sprite } from '../nodes/node2d/sprite.js'
 import { multiKF } from './multiple.js'
 import { kfFromProp } from './properties.js'
 

@@ -1,19 +1,16 @@
-import { Vector2, vectorize, type VectorLike } from '../math/vector2.js'
-import { GameConfig } from '../core/game-config.js'
 import { Event, getEventName } from '../events/event.js'
-import { type NodeInstances } from './types.js'
+import { type NodeInstances } from './lib/types.js'
 import {
   InvalidNodeIdError,
   NodeChildNotFoundError,
   NodeTypeMismatchError,
   UnknownNodeTypeError,
 } from '../errors/node.js'
-import { getNodeName } from './utils.js'
-import { Nodes } from './registry.js'
+import { getNodeName } from './lib/utils.js'
+import { Nodes } from './lib/registry.js'
 import type { Fun } from '../events/types.js'
-import { PrimaryNode } from './enum.js'
+import { PrimaryNode } from './lib/enum.js'
 import type { TinyScript } from '../scripts/script.js'
-import { ns } from '../utils/null-ternary.js'
 
 export interface NodeOptions<T extends PrimaryNode> {
   /**
@@ -50,24 +47,6 @@ export interface NodeOptions<T extends PrimaryNode> {
    */
   id?: string | symbol
   /**
-   * The **`position`** property of a node.
-   * It represents the position in the plane.
-   *
-   * @example
-   * ```tsx
-   * useEvent(transform, 'updated', (delta) => {
-   *   transform.node.position.x += delta * 20
-   * })
-   *
-   * return (
-   *   <transform ref={transform}>
-   *     <sprite textureId={BALL_TEXTURE} />
-   *   </transform>
-   * )
-   * ```
-   */
-  position?: VectorLike
-  /**
    * The **`zIndex`** property of a node.
    * It represents the position in Z in the plane.
    *
@@ -103,26 +82,6 @@ const idRegEx = /([a-zA-Z][a-zA-Z0-9-_]*)/g
 export abstract class Node<T extends PrimaryNode = PrimaryNode> {
   type: T
   #id: string | symbol
-  /**
-   * The **`position`** property of a node.
-   * It represents the position in the plane.
-   *
-   * @example
-   * ```tsx
-   * const transform = useRefNode(PrimaryNode.Transform)
-   *
-   * useEvent(transform, 'updated', (delta) => {
-   *   transform.node.position.x += delta * 20
-   * })
-   *
-   * return (
-   *   <transform ref={transform}>
-   *     <sprite textureId={BALL_TEXTURE} />
-   *   </transform>
-   * )
-   * ```
-   */
-  position: Vector2 = Vector2.ZERO
   #zIndex: number = 0
   _parent?: Node
   _children: Node[] = []
@@ -151,7 +110,7 @@ export abstract class Node<T extends PrimaryNode = PrimaryNode> {
 
   constructor(
     type: T,
-    { id, position, zIndex, deltaIncrease, script, children }: NodeOptions<T>,
+    { id, zIndex, deltaIncrease, script, children }: NodeOptions<T>,
   ) {
     this.type = type
 
@@ -171,7 +130,6 @@ export abstract class Node<T extends PrimaryNode = PrimaryNode> {
       this.script.init(this as NodeInstances[T])
     }
 
-    this.position = ns(position, vectorize, this.position)
     this.#zIndex = zIndex ?? this.#zIndex
     this.deltaIncrease = deltaIncrease ?? this.deltaIncrease
 
@@ -259,20 +217,6 @@ export abstract class Node<T extends PrimaryNode = PrimaryNode> {
     return this._children
   }
 
-  /**
-   * Gets or sets the **`globalPosition`** of the node.
-   */
-  set globalPosition(value) {
-    this.position = value.toSubtracted(
-      this._parent?.globalPosition ?? Vector2.ZERO,
-    )
-  }
-  get globalPosition(): Vector2 {
-    if (this._parent) {
-      return this.position.toAdded(this._parent.globalPosition)
-    }
-    return this.position
-  }
   /**
    * Gets or sets the **`zIndex`** of the node.
    */
@@ -468,13 +412,6 @@ export abstract class Node<T extends PrimaryNode = PrimaryNode> {
    */
   draw(delta: number): void {
     this.drawed.emit(delta)
-    for (const node of this._children) {
-      GameConfig.ctx.translate(this.position.x, this.position.y)
-      GameConfig.translate.add(this.position)
-      node.draw(delta * node.deltaIncrease)
-      GameConfig.translate.subtract(this.position)
-      GameConfig.ctx.translate(-this.position.x, -this.position.y)
-    }
   }
 
   /**

@@ -1,7 +1,7 @@
 import { NodeNotInitializedError } from '../errors'
 import type { Event } from '../events'
 import type { NodeInstances } from '../nodes'
-import type { PrimaryNode } from '../nodes/enum'
+import type { PrimaryNode } from '../nodes/lib/enum'
 
 export abstract class TinyScript<T extends PrimaryNode> {
   #me: NodeInstances[T] | undefined

@@ -1,5 +1,5 @@
 import { InvalidSceneRootError, SceneNotFoundError } from '../errors/scene.js'
-import { Node } from '../nodes/node.js'
+import { Node } from '../nodes/_node.js'
 import type { Scene } from './scene.js'
 
 export class SceneManager {

@@ -1,5 +1,5 @@
 import type { AnimationKeyframe } from '../nodes/animation-player.js'
-import type { Node } from '../nodes/node.js'
+import type { Node } from '../nodes/_node.js'
 
 /**
  * The **`kfFromProp`** function returns a keyframe that sets a property in a `Node`.

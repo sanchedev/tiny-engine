@@ -2,8 +2,12 @@ export { CollisionSystem } from './collision-system.js'
 export { SpatialHash } from './broadphase/spatial-hash.js'
 export { Narrowphase } from './narrowphase/detector.js'
 export { CollisionEmitter } from './events/collision-emitter.js'
-export { Collider, type ColliderOptions } from './collider.js'
-export { RayCast, type RayCastOptions } from './ray-cast.js'
+export { Collider, type ColliderOptions } from '../nodes/node2d/collider.js'
+export { RayCast, type RayCastOptions } from '../nodes/node2d/ray-cast.js'
 export type { CollisionBounds } from './types.js'
-export type { Shape, RectangleShape, CircleShape } from './narrowphase/shapes.js'
+export type {
+  Shape,
+  RectangleShape,
+  CircleShape,
+} from './narrowphase/shapes.js'
 export { shapes } from './narrowphase/shapes.js'

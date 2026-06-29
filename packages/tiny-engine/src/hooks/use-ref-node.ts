@@ -1,7 +1,7 @@
 import { NodeNotInitializedError } from '../errors/lifecycle.js'
 import { NodeTypeMismatchError } from '../errors/node.js'
-import { PrimaryNode } from '../nodes/enum.js'
-import { type NodeInstances } from '../nodes/types.js'
+import { PrimaryNode } from '../nodes/lib/enum.js'
+import { type NodeInstances } from '../nodes/lib/types.js'
 
 /**
  * The **`useRefNode`** hook creates a reference to a node of the specified type.

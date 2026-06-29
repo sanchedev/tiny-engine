@@ -1,8 +1,8 @@
 import { KeyframeNotFoundError } from '../errors/animation.js'
 import { Event } from '../events/event.js'
-import { PrimaryNode } from './enum.js'
-import { Node, type NodeOptions } from './node.js'
-import { Nodes } from './registry.js'
+import { PrimaryNode } from './lib/enum.js'
+import { Node, type NodeOptions } from './_node.js'
+import { Nodes } from './lib/registry.js'
 
 export interface AnimationPlayerOptions extends NodeOptions<PrimaryNode.AnimationPlayer> {}
 
@@ -182,7 +182,6 @@ export class AnimationPlayer extends Node<PrimaryNode.AnimationPlayer> {
    * The **`stop`** method stops the current animation.
    */
   stop() {
-
     if (this.#currentAnim == null) return
     this.animationStopped.emit(this.#currentAnim)
     this.#index = 0

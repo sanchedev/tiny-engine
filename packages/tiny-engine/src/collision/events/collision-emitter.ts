@@ -1,4 +1,4 @@
-import type { Collider } from '../collider.js'
+import type { Collider } from '../../nodes/node2d/collider.js'
 
 /**
  * The **`CollisionEmitter`** class is a static utility that emits collision events on colliders.

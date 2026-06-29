@@ -12,7 +12,7 @@ import {
   type SceneOptions,
 } from '../components/scene.js'
 import { renderToNodes } from './to-nodes.js'
-import { Node } from '../../nodes/node.js'
+import { Node } from '../../nodes/_node.js'
 import {
   InvalidGameElementError,
   InvalidSceneComponentError,

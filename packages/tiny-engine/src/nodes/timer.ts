@@ -1,7 +1,7 @@
 import { Event } from '../events/event.js'
-import { PrimaryNode } from './enum.js'
-import { Node, type NodeOptions } from './node.js'
-import { Nodes } from './registry.js'
+import { PrimaryNode } from './lib/enum.js'
+import { Node, type NodeOptions } from './_node.js'
+import { Nodes } from './lib/registry.js'
 
 /**
  * The **`TimerOptions`** interface defines the options for a `Timer` node.

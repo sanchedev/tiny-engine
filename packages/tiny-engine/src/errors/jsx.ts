@@ -1,4 +1,4 @@
-import { Node } from '../nodes/node.js'
+import { Node } from '../nodes/_node.js'
 import { TinyEngineError } from './base.js'
 
 export class JSXError extends TinyEngineError {
