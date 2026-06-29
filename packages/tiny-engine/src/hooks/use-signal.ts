@@ -20,7 +20,7 @@ import { pushEffect } from './context.js'
  *   console.log('Count:', count.value)
  * }, [count])
  *
- * return <button onClick={handleClick} />
+ * return <clickable onClick={handleClick} />
  * ```
  */
 export function useSignal<T>(initialValue: T) {
@@ -43,7 +43,7 @@ export function useSignal<T>(initialValue: T) {
  * const y = useSignal(20)
  *
  * // Automatically recomputes when x or y changes
- * const sum = useSignalFrom((a, b) => a + b, [x, y])
+ * const sum = useComputed((a, b) => a + b, [x, y])
  *
  * useEffect(() => {
  *   console.log('Sum:', sum.value) // 30
@@ -54,11 +54,11 @@ export function useSignal<T>(initialValue: T) {
  * // sum.value is now 35
  * ```
  */
-export function useSignalFrom<const T extends Signal<any>[], K>(
+export function useComputed<const T extends Signal<any>[], K>(
   fn: (...args: UnwrapSignals<T>) => K,
   deps: T,
 ): Signal<K> {
-  pushEffect('useSignalFrom', () => {})
+  pushEffect('useComputed', () => {})
   const signal = new Signal<K>(
     fn(...(deps.map((d) => d.value) as UnwrapSignals<T>)),
   )

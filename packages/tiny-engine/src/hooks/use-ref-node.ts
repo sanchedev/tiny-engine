@@ -28,7 +28,7 @@ import { type NodeInstances } from '../nodes/lib/types.js'
  *
  * return (
  *   <transform ref={transform}>
- *     <button onClick={() => spawn(<sprite />)} />
+ *     <clickable onClick={() => spawn(<sprite />)} />
  *   </transform>
  * )
  * ```

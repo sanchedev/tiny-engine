@@ -21,7 +21,7 @@ import type { NodeReference } from './use-ref-node.js'
  *
  * return (
  *   <transform ref={container}>
- *     <button onClick={handleClick} />
+ *     <clickable onClick={handleClick} />
  *   </transform>
  * )
  * ```

@@ -24,7 +24,7 @@ export class Reference<T> {
  *   console.log(count.current)
  * }
  *
- * return <button onClick={handleClick} />
+ * return <clickable onClick={handleClick} />
  * ```
  */
 export function useRef<T>(value: T) {
