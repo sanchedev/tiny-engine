@@ -4,7 +4,10 @@ import { PrimaryNode } from './lib/enum.js'
 import { Node, type NodeOptions } from './_node.js'
 import { Nodes } from './lib/registry.js'
 
-export interface AnimationPlayerOptions extends NodeOptions<PrimaryNode.AnimationPlayer> {}
+export interface AnimationPlayerOptions extends NodeOptions<PrimaryNode.AnimationPlayer> {
+  animations?: Record<string, Animation>
+  currentAnim?: string
+}
 
 export class AnimationPlayer extends Node<PrimaryNode.AnimationPlayer> {
   #animations = new Map<string, Animation>()
@@ -23,6 +26,8 @@ export class AnimationPlayer extends Node<PrimaryNode.AnimationPlayer> {
 
   constructor(options: AnimationPlayerOptions) {
     super(PrimaryNode.AnimationPlayer, options)
+    if (options.animations) this.define(options.animations)
+    if (options.currentAnim) this.play(options.currentAnim)
   }
 
   // Events
