@@ -1,5 +1,5 @@
-import { PrimaryNode, Vector2, type VectorLike } from 'tiny-engine'
-import type { Plant } from '../../lib/enums/plants'
+import { loadTexture, PrimaryNode, Vector2, type VectorLike } from 'tiny-engine'
+import { Plant } from '../../lib/enums/plants'
 import { PlantComponents } from '../../lib/components/plants'
 import {
   useComputed,
@@ -9,24 +9,28 @@ import {
 } from 'tiny-engine/hooks'
 import { BoardCtx } from '../../contexts/board'
 import { plantsInfo } from '../../lib/info/plants'
+import { SunCountCtx } from '../../contexts/sun-count'
 
 export function PlantSeed({
   plant,
-  seedTexture,
   position,
 }: {
   plant: Plant
-  seedTexture: symbol
   position?: VectorLike
 }) {
   const { spawnPlant } = useContext(BoardCtx)
+  const [sunCount] = useContext(SunCountCtx)
   const timer = useRefNode(PrimaryNode.Timer)
 
   const [hover, setHover] = useSignal(false)
-  const [disabled, setDisabled] = useSignal(true)
+  const [loaded, setLoaded] = useSignal(false)
   const [time, setTime] = useSignal(0)
 
   const progress = useComputed(() => time() / plantsInfo[plant].seedCooldown)
+
+  const disabled = useComputed(
+    () => !loaded() || sunCount() < plantsInfo[plant].price,
+  )
 
   const brightness = useComputed(() => (hover() ? 1.1 : 1))
   const grayscale = useComputed(() => (disabled() ? 0.75 : 0))
@@ -34,17 +38,22 @@ export function PlantSeed({
 
   const handleClick = () => {
     spawnPlant(0, 2, PlantComponents[plant])
-    setDisabled(true)
+    setLoaded(false)
     timer.node.play()
   }
 
   return (
     <sprite
-      textureId={seedTexture}
+      textureId={PLANT_SEEDS[plant]}
       position={position}
       brightness={brightness}
       grayscale={grayscale}>
-      <sprite textureId={seedTexture} grayscale={1} sourceSize={sourceSize} />
+      <sprite
+        textureId={PLANT_SEEDS[plant]}
+        grayscale={1}
+        brightness={0.75}
+        sourceSize={sourceSize}
+      />
       <clickable
         size={[18, 14]}
         position={[3, 1]}
@@ -57,9 +66,13 @@ export function PlantSeed({
         ref={timer}
         duration={plantsInfo[plant].seedCooldown}
         onTimeChange={setTime}
-        onTimeout={() => setDisabled(false)}
+        onTimeout={() => setLoaded(true)}
         autoPlay
       />
     </sprite>
   )
+}
+
+const PLANT_SEEDS: Record<Plant, symbol> = {
+  [Plant.Peashooter]: await loadTexture('/assets/sprites/seeds/peashooter.png'),
 }
